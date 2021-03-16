@@ -1,0 +1,229 @@
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default padding */
+ul[class],
+ol[class] {
+  padding: 0;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* Remove list styles on ul, ol elements with a class attribute */
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Natural flow and rhythm in articles by default */
+article > * + * {
+  margin-top: 1em;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations and transitions for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  background-color: #F3F7FA;
+}
+
+nav {
+  background-color: #193144;
+}
+
+h1 {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 32px;
+}
+
+h2 {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 26px;
+}
+
+h3 {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 22px;
+}
+
+p {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+}
+
+
+/* Style for event elements, cards are sqare elements, bars are the longer elements*/
+.event {
+  display: inline-block;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 15px 25px;
+}
+
+.event-user-status {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+}
+
+.event-card {
+  width: 300px;
+  margin: 10px;
+}
+
+.event-card h3 {
+  height: 66px;
+  display: flex;
+  align-items: center;
+}
+
+.event-card-details p{
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.event-card-details > * {
+  overflow: hidden;
+}
+
+.event-card-details {
+  display: grid;
+  grid-template-columns: 25px minmax(0px, 1fr);
+  grid-template-rows:48px;
+  align-content:flex-start;
+  grid-column-gap: 5px;
+  grid-row-gap: 3px;
+}
+
+.event-bar {
+  max-width: 1000px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 25% auto;
+  width: 90%;
+  margin: 10px 5%;
+}
+
+.event-bar-title {
+  margin: auto 0 ;
+  grid-column-start: 1;
+  grid-column-end: 1;
+}
+
+.event-bar-details {
+  display: grid;
+  margin-left: 10px;
+  grid-template-columns: 25px auto;
+  align-content:flex-start;
+  grid-row-gap: 3px;
+  grid-column-gap: 5px;
+}
+
+.event-bar-expand {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  height: 25px;
+  width: 25px;
+}
+
+.user-icon {
+  border-radius: 100%;
+  background-color: white;
+  border: 1px solid black;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-icon-list .user-icon {
+  height:40px;
+  width:40px;
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.user-icon-list .user-icon {
+  margin-left: -10px
+}
+
+.user-icon-list {
+  height:40px;
+  display: inline-block;
+}
+
+.scroll-full-width {
+  /*width: 100%;
+  overflow: auto;*/
+}
+
+.scroll-event-cards {
+  /*height: 190px;*/
+}
+
+.scroll-full-width{
+  overflow-x: auto;
+}
