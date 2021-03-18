@@ -1,3 +1,5 @@
+/* CSS resets, these can be ignored */
+
 /* Box sizing rules */
 *,
 *::before,
@@ -77,6 +79,9 @@ select {
   }
 }
 
+/* END CSS resets */
+
+/* Basic theme coloring and typrgraphic scale, this shouldnt change */
 body {
   background-color: #F3F7FA;
 }
@@ -114,6 +119,8 @@ p {
 }
 
 
+
+
 /* Style for event elements, cards are sqare elements, bars are the longer elements*/
 .event {
   display: inline-block;
@@ -123,15 +130,21 @@ p {
   padding: 15px 25px;
 }
 
-.event-user-status {
-    position: absolute;
-    right: 10px;
-    bottom: 5px;
-}
-
+/* Style for a base event card */
 .event-card {
   width: 300px;
   margin: 10px;
+}
+
+/* Style for components of a base event card */
+/* Style for a base event card details, mostly positioning */
+.event-card-details {
+  display: grid;
+  grid-template-columns: 25px minmax(0px, 1fr);
+  grid-template-rows:48px;
+  align-content:flex-start;
+  grid-column-gap: 5px;
+  grid-row-gap: 3px;
 }
 
 .event-card h3 {
@@ -149,24 +162,16 @@ p {
   overflow: hidden;
 }
 
-.event-card-details {
-  display: grid;
-  grid-template-columns: 25px minmax(0px, 1fr);
-  grid-template-rows:48px;
-  align-content:flex-start;
-  grid-column-gap: 5px;
-  grid-row-gap: 3px;
-}
-
+/* Style for a base event bar */
 .event-bar {
   max-width: 1000px;
   position: relative;
   display: grid;
   grid-template-columns: 25% auto;
   width: 90%;
-  margin: 10px 5%;
+  margin: 10px auto;
 }
-
+/* Style for components of a base event bar */
 .event-bar-title {
   margin: auto 0 ;
   grid-column-start: 1;
@@ -176,7 +181,7 @@ p {
 .event-bar-details {
   display: grid;
   margin-left: 10px;
-  grid-template-columns: 25px auto;
+  grid-template-columns: 25px minmax(0px, 1fr);
   align-content:flex-start;
   grid-row-gap: 3px;
   grid-column-gap: 5px;
@@ -190,6 +195,15 @@ p {
   width: 25px;
 }
 
+/* Styling for user icons */
+/* Position the bottom right of a card */
+.event-user-status {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+}
+
+/* General user icon styles */
 .user-icon {
   border-radius: 100%;
   background-color: white;
@@ -198,15 +212,13 @@ p {
   justify-content: center;
 }
 
+/* User icon styling in context of a list */
 .user-icon-list .user-icon {
   height:40px;
   width:40px;
   display: inline-flex;
   overflow: hidden;
   vertical-align: top;
-}
-
-.user-icon-list .user-icon {
   margin-left: -10px
 }
 
@@ -215,6 +227,7 @@ p {
   display: inline-block;
 }
 
+/* Styles for scrolling (needs some work) */
 .scroll-full-width {
   /*width: 100%;
   overflow: auto;*/
