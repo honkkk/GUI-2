@@ -12,8 +12,8 @@ const EventCard = () => {
   let users = ["A", "B", "C", "D", "E"];
 
   let ret = (
-    <div className="event event-bar" style={{'border-left': '5px solid green'}}>
-      <button className="event-bar-expand"> V</button>
+    <div className="event event-bar">
+      <button className="event-bar-expand"> <p>Details</p></button>
       <div className="event-user-status user-icon-list">
         <UserList users={users} maxShown={2}/>
       </div>

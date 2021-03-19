@@ -69,6 +69,10 @@ select {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
 /* Remove all animations and transitions for people that prefer not to see them */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -94,21 +98,27 @@ h1 {
   font-family: Inter;
   font-style: normal;
   font-weight: normal;
-  font-size: 32px;
+  font-size: 54px;
+  line-height: 62px;
+  margin-bottom: 8px;
 }
 
 h2 {
   font-family: Inter;
   font-style: normal;
   font-weight: normal;
-  font-size: 26px;
+  font-size: 36px;
+  line-height: 44px;
+  margin-bottom: 8px;
 }
 
 h3 {
   font-family: Inter;
   font-style: normal;
   font-weight: normal;
-  font-size: 22px;
+  font-size: 24px;
+  line-height: 32px;
+  margin-bottom: 8px;
 }
 
 p, a {
@@ -116,11 +126,13 @@ p, a {
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
+  line-height: 24px;
 }
 
 nav ul {
   list-style: none;
-  margin: 0;
+  margin: 0 10%;
+  padding: 0;
 }
 
 nav ul li {
@@ -135,6 +147,15 @@ nav a {
 
 nav .active {
   text-decoration: underline;
+}
+
+.content {
+  width: 1000px;
+  margin: 40px auto;
+}
+
+section {
+  margin: 40px 0;
 }
 
 
@@ -181,11 +202,10 @@ nav .active {
 
 /* Style for a base event bar */
 .event-bar {
-  max-width: 1000px;
+  width: 100%;
   position: relative;
   display: grid;
   grid-template-columns: 25% auto;
-  width: 90%;
   margin: 10px auto;
 }
 /* Style for components of a base event bar */
@@ -206,18 +226,24 @@ nav .active {
 
 .event-bar-expand {
   position: absolute;
-  right: 10px;
-  top: 5px;
-  height: 25px;
-  width: 25px;
+  right: 7px;
+  top: 7px;
+}
+
+button.event-bar-expand {
+  background-color: green;
+  border: none;
+  border-radius: 5px;
+  color:white;
+  padding: 5px 10px;
 }
 
 /* Styling for user icons */
 /* Position the bottom right of a card */
 .event-user-status {
     position: absolute;
-    right: 10px;
-    bottom: 5px;
+    right: 7px;
+    bottom: 7px;
 }
 
 /* General user icon styles */
@@ -244,6 +270,52 @@ nav .active {
   display: inline-block;
 }
 
+.category-card {
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  height: 325px;
+  width: 225px;
+  margin: 0 10px;
+  padding: 0;
+}
+
+.category-card-toggle  {
+  border: 5px solid green;
+  border-radius: 10px;
+}
+
+.category-card .backdrop {
+  z-index: 5;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: rgb(0,0,0, 0.2);
+  background: linear-gradient(0deg, rgba(25,49,68,0.4) 0%, rgba(0,0,0,0.1) 66%);
+}
+
+.category-card img {
+  display: block;
+  position: relative;
+  object-fit: cover;
+  height: 100%;
+  width: auto;
+}
+
+.category-card h3 {
+  z-index: 10;
+  color: #F6F6F6;
+  font-weight: bold;
+  padding: 0 10px;
+  margin: 0;
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 /* Styles for scrolling (needs some work) */
 .scroll-full-width {
   /*width: 100%;
@@ -251,6 +323,8 @@ nav .active {
 }
 
 .scroll-event-cards {
+  display: flex;
+  justify-content: center;
   /*height: 190px;*/
 }
 

@@ -14,13 +14,8 @@ const TestPage = () => {
       {/*Event cards that will have overflow scrolling ability*/}
       <div className="scroll-full-width scroll-event-cards">
         <EventCard location="13 Rockwood Rd Norfolk, MA wqewqewqewqeqwewqewqeqweqweqweqwewqeqwewqeq" name="Event Title,  This title might be long" date="Mon. March 13th"/>
-        <EventCard location="13 Rockwood Rd Norfolk, MA" name="Event Title 2" date="Mon. March 33th"/>
-        <EventCard location="13 Rockwood Rd Norfolk, MA wqewqewqewqeqwewqewqeqweqweqweqwewqeqwewqeq" name="Event Title,  This title might be long" date="Mon. March 13th"/>
       </div>
       {/*Example Event Bars that adapt to the size of the screen*/}
-      <EventBar />
-      <EventBar />
-      <EventBar />
       <EventBar />
     </div>
   )

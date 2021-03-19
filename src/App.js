@@ -90,20 +90,22 @@ class App extends Component {
             </nav>
           </header>
           {/*Render body depending on the url path*/}
-          <Switch>
-            <Route path="/test">
-              <TestPage />
-            </Route>
-            <Route path="/feed">
-              <FeedPage />
-            </Route>
-            <Route path="/profile">
-              <ProfilePage />
-            </Route>
-            <Route exact path="/">
-              <h1> This is the home page </h1>
-            </Route>
-          </Switch>
+          <div className="content">
+            <Switch>
+              <Route path="/test">
+                <TestPage />
+              </Route>
+              <Route path="/feed">
+                <FeedPage />
+              </Route>
+              <Route path="/profile">
+                <ProfilePage />
+              </Route>
+              <Route exact path="/">
+                <h1> This is the home page </h1>
+              </Route>
+            </Switch>
+          </div>
         </div>
       </ Router>
     )
