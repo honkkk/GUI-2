@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import FeedPage from "./feed.js"
 import ProfilePage from "./profile.js"
 import TestPage from "./test.js"
+import CreatePage from "./create.js"
 import {
   BrowserRouter as Router,
   Switch,
@@ -86,6 +87,7 @@ class App extends Component {
                 <li> <NavLink exact to="/test" activeClassName="active">Test</NavLink></li>
                 <li> <NavLink exact to="/feed" activeClassName="active">Feed</NavLink></li>
                 <li> <NavLink exact to="/profile" activeClassName="active">Profile</NavLink></li>
+                <li> <NavLink exact to="/create" activeClassName="active">Create</NavLink></li>
               </ul>
             </nav>
           </header>
@@ -100,6 +102,9 @@ class App extends Component {
               </Route>
               <Route path="/profile">
                 <ProfilePage />
+              </Route>
+              <Route path="/create">
+                <CreatePage/>
               </Route>
               <Route exact path="/">
                 <h1> This is the home page </h1>
