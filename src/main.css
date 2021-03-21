@@ -230,7 +230,7 @@ section {
   top: 7px;
 }
 
-button.event-bar-expand {
+button {
   background-color: green;
   border: none;
   border-radius: 5px;
@@ -268,6 +268,13 @@ button.event-bar-expand {
 .user-icon-list {
   height:40px;
   display: inline-block;
+}
+
+.expanded-participants {
+  text-align: center;
+  grid-row-gap: 10px;
+  display: grid;
+  grid-template-columns: 30px repeat(3, 1fr);
 }
 
 .category-card {
@@ -314,6 +321,65 @@ button.event-bar-expand {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+
+.popup-wrapper {
+  z-index: 200;
+  top:0;
+  left: 0;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.expanded-bottom-buttons button {
+  margin: 14px 3px 7px;
+}
+
+.expanded-bottom-buttons {
+  float: right;
+}
+
+.popup .event-expanded-tags {
+  display: grid;
+  grid-template-columns: 24px 1fr 24px 1fr;
+  grid-column-gap: 7px;
+  margin: 15px 0;
+}
+
+.event-expanded .line {
+  margin: 15px 0;
+}
+
+.event-expanded ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 10px;
+}
+
+.line {
+  width: 100%;
+  margin: 0 auto;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.popup-hidden {
+  display: none;
+}
+
+.popup {
+  z-index: 200;
+  width: 700px;
+  overflow: auto;
+  max-height: calc(100vh - 200px);
+  background-color: #F3F7FA;
+  padding: 20px 30px;
+  margin: 100px calc(50% - 350px);
+  border-radius: 10px;
+  border: 3px solid #a8b4bd;
 }
 
 /* Styles for scrolling (needs some work) */
