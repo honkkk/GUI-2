@@ -4,7 +4,7 @@ const UserInfo = ({name, userName, location}) => {
 
   let ret = (
     <div>
-      <h3>{name}</h3>
+      <h3><strong>{name}</strong></h3>
       <p>@{userName}</p>
       <p>#{location}</p>
     </div>

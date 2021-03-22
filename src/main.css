@@ -231,10 +231,8 @@ section {
 }
 
 button {
-  background-color: green;
   border: none;
   border-radius: 5px;
-  color:white;
   padding: 5px 10px;
 }
 
@@ -409,6 +407,7 @@ button {
   width: 200px;
   height: 200px;
   border-radius: 50%;
+  padding-bottom: 20px;
 }
 .profile-buttons {
 
@@ -427,4 +426,75 @@ button {
   padding-top: 20px;
   background-color: white;
   padding-bottom: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.create-page{
+  display: flex;
+}
+.create-left{
+  flex: 1;
+  padding-right: 5%;
+
+}
+
+.create-right{
+  flex: 3;
+  width: 65%;
+  border-left: 6px solid gray;
+  border-radius: 6px;
+
+}
+.create-input{
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 32px;
+  margin-bottom: 8px;
+  padding-left: 30px;
+  display: flex;
+}
+.create-input label{
+  padding-right: 30px;
+  flex:1;
+}
+.create-input input{
+  padding-right: 30px;
+  flex:2;
+}
+.add-game{
+  display: flex;
+  justify-content: flex-end;
+}
+.add-game p{
+  padding-right: 5px;
+}
+.add-game button{
+  display: flex;
+  background-color: none;
+}
+.game-tags{
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 20px;
+}
+.game-tags  input{
+  display: none;
+}
+.game-tags label {
+  display: flex;
+  justify-content: center;
+  background: none;
+  width: 150px;
+  height: 30px;
+  text-align: center;
+  border: 3px solid black;
+  border-radius: 50px;
+}
+#createRPG:checked ~ label[for="createRPG"],
+#createBG:checked ~ label[for="createBG"],
+#createCG:checked ~ label[for="createCG"],
+#createVG:checked ~ label[for="createVG"]{
+  border-color: green;
+  background-color: #abffba;
 }
