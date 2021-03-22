@@ -460,9 +460,21 @@ button.button-no-style {
 .create-left{
   flex: 1;
   padding-right: 5%;
+  text-align: center;
 
 }
-
+#createButton{
+  background-color: green;
+  margin-top: 100px;
+  color: white;
+  width:100px;
+  height: 50px;
+  align-items: center;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+}
 .create-right{
   flex: 3;
   width: 65%;
@@ -488,6 +500,17 @@ button.button-no-style {
   padding-right: 30px;
   flex:2;
 }
+.create-input textarea{
+  padding-right: 30px;
+  height: 130px;
+  flex:2;
+}
+.create-input .time{
+  flex:2;
+  display: flex;
+  justify-content: flex-start;
+}
+
 .add-game{
   display: flex;
   justify-content: flex-end;
@@ -503,6 +526,7 @@ button.button-no-style {
   display: flex;
   justify-content: space-between;
   padding-bottom: 20px;
+  padding-left: 30px;
 }
 .game-tags  input{
   display: none;
@@ -524,7 +548,22 @@ button.button-no-style {
   border-color: green;
   background-color: #abffba;
 }
-
+.date{
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 32px;
+  margin-bottom: 8px;
+  padding-left: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+.date label{
+}
+.date input{
+  width: 100px;
+}
 .sign-page{
   background-color: rgb(58, 38, 99);
   background-repeat:repeat-x;

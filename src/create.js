@@ -7,6 +7,7 @@ const CreatePage = () => {
       <div className = "create-page">
         <div className = "create-left">
           <h1> Host Event </h1>
+          <button id="createButton">Create</button>
         </div>
         <div className = "create-right">
           <div className = "create-input">
@@ -37,13 +38,31 @@ const CreatePage = () => {
             <label>Capacity:</label>
             <input type="text" placeholder="Number of max players"></input>
           </div>
+          <div className = "date">
+            <label>DD:</label>
+            <input type="text" placeholder="DD"></input>
+            <label>MM:</label>
+            <input type="text" placeholder="MM"></input>
+            <label>YR:</label>
+            <input type="text" placeholder="YR"></input>
+          </div>
+          <div className = "create-input">
+            <label>Time:</label>
+            <div className = "time">
+            <input type="text" placeholder="HH:MM"></input>
+            </div>
+            <select>
+              <option value="AM">AM</option>
+              <option value="PM">PM</option>
+            </select>
+          </div>
           <div className = "create-input">
             <label>Location:</label>
             <input type="text" placeholder="Location"></input>
           </div>
           <div className = "create-input">
             <label>Details:</label>
-            <input type="text" placeholder="Details"></input>
+            <textarea placeholder="Details"></textarea>
           </div>
         </div>
       </div>
