@@ -1,6 +1,7 @@
 import React from "react"
-import {game, dice, clock, user} from "./icons.js"
+import {game, dice, clock, user, del} from "./icons.js"
 import UserList from "./userList.js"
+import {useState} from 'react';
 
 // EventBar component is used to show events in a bar format
 // location       (required, string)     location for an event
@@ -9,11 +10,18 @@ import UserList from "./userList.js"
 // users          (required, [user])     a list of the users at the event
 const EventCard = () => {
 
+  const [togglePopup, setTogglePopup] = useState(false);
+
   let users = ["A", "B", "C", "D", "E"];
 
+  const togglePopupController = () => {
+    setTogglePopup(!togglePopup);
+  }
+
   let details = (
-    <div className="popup-wrapper popup-hidden">
+    <div className="popup-wrapper">
       <div className="popup event-expanded">
+        <button className="close button-no-style" onClick={togglePopupController}>{del(20, 20)}</button>
         <h2> This is where the title for the event goes! </h2>
         <div className="event-expanded-tags">
           {game(26, 26)}
@@ -62,9 +70,9 @@ const EventCard = () => {
 
   let ret = (
     <>
-      {details}
+      {togglePopup && details}
       <div className="event event-bar">
-        <button className="event-bar-expand"> <p>Details</p></button>
+        <button className="event-bar-expand" onClick={togglePopupController}> <p>Details</p></button>
         <div className="event-user-status user-icon-list">
           <UserList users={users} maxShown={2}/>
         </div>
