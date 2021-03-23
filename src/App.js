@@ -82,19 +82,18 @@ class App extends Component {
       <Router>
         <div className="App">
           <Switch>
-            <Route exact path="/signin">
+            <Route exact path="/">
               <SignPage/>
             </Route>
             <Route>
               <header className="App-header">
                 <nav>
                   <ul>
-                    <li> <NavLink exact to="/" activeClassName="active">Home</NavLink></li>
                     <li> <NavLink exact to="/test" activeClassName="active">Test</NavLink></li>
                     <li> <NavLink exact to="/feed" activeClassName="active">Feed</NavLink></li>
                     <li> <NavLink exact to="/profile" activeClassName="active">Profile</NavLink></li>
                     <li> <NavLink exact to="/create" activeClassName="active">Create</NavLink></li>
-                    <li> <NavLink exact to="/signin" activeClassName="active">Signin/up</NavLink></li>
+                    <li> <NavLink exact to="/" activeClassName="active">Sign out</NavLink></li>
                   </ul>
                 </nav>
               </header>
@@ -112,9 +111,6 @@ class App extends Component {
                   </Route>
                   <Route path="/create">
                     <CreatePage/>
-                  </Route>
-                  <Route exact path="/">
-                    <h1> This is the home page </h1>
                   </Route>
                 </Switch>
               </div>

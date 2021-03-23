@@ -15,8 +15,8 @@ const SignPage = () => {
           <p> Password: </p>
           <input type="password"/>
         </label>
-        <Link to="/"><button> <h3>Login</h3> </button></Link>
-        <Link to="/"><p>Sign Up</p></Link>
+        <Link to="/feed"><button> <h3>Login</h3> </button></Link>
+        <Link to="/feed"><p>Sign Up</p></Link>
       </div>
     </div>
   )
