@@ -242,6 +242,7 @@ button.button-no-style {
   border: none;
   border-radius: 0;
   padding: 0;
+  margin: 0;
   background: none;
   background-color: none;
 }
@@ -256,11 +257,14 @@ button.button-no-style {
 
 /* General user icon styles */
 .user-icon {
+  height: 150px;
+  width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 100%;
   background-color: white;
   border: 1px solid black;
-  align-items: center;
-  justify-content: center;
 }
 
 /* User icon styling in context of a list */
@@ -608,6 +612,85 @@ button.button-no-style {
   background-color: rgba(214, 214, 214, 0.4);
 }
 
+.signup-content.profile-setup {
+  width: 900px;
+}
+
+.signup-content.profile-setup h1 {
+  text-align: left;
+}
+
 .signup-content p {
   margin-top: 10px;
+}
+
+.progress-bar {
+  margin: 16px 0;
+  display: grid;
+  grid-template-columns: repeat(4, 150px);
+}
+
+.progress-step {
+  display: grid;
+  grid-template-columns: 50px 100px;
+}
+
+.marker-circle p {
+  margin: 0
+}
+
+.marker-circle-current {
+  border:4px solid green;
+}
+
+div.marker-circle-complete {
+  background-color: green;
+}
+
+.profile-fields .user-icon {
+  margin: 32px auto;
+  position: relative;
+}
+
+button.plus {
+  height: 50px;
+  width: 50px;
+  font-size: 30px;
+  background: white;
+  border: 1px solid black;
+  border-radius: 100%;
+  position: absolute;
+  right: -10px;
+  bottom:-20px;
+}
+
+.profile-setup button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.profile-setup .setup-field {
+  width: 70%;
+  margin: 16px auto;
+}
+
+.marker-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  height: 50px;
+  width: 50px;
+  background-color: white;
+}
+
+button.setup-next {
+  font-family: Roboto;
+  font-size: 22px;
+  height: 40px;
+  width: 20%;
+  margin:32px 0 0 65%;
+
 }
