@@ -45,8 +45,8 @@ const SignPage = () => {
             </label>
           </>)
         }
-        <Link to={!toggleSignup ?"/feed":"/profile-setup"}><button> <h3>{!toggleSignup ?"Login":"Sign Up"}</h3> </button></Link>
-        <button className="button-no-style" onClick={toggleSignupController}><p>{toggleSignup ?"Already have an account? Login":"Don't have an account? Sign Up"}</p></button>
+        <Link to={!toggleSignup ?"/feed":"/profile-setup"}><button className="login-button"> <h3>{!toggleSignup ?"Login":"Sign Up"}</h3> </button></Link>
+        <button className="button-no-style login-button" onClick={toggleSignupController}><p>{toggleSignup ?"Already have an account? Login":"Don't have an account? Sign Up"}</p></button>
       </div>
     </div>
   )

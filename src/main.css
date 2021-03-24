@@ -66,7 +66,8 @@ input,
 button,
 textarea,
 select {
-  font: inherit;
+  font: 'Roboto';
+  font-size: 16px;
 }
 
 button {
@@ -88,6 +89,10 @@ button {
 /* Basic theme coloring and typrgraphic scale, this shouldnt change */
 body {
   background-color: #F3F7FA;
+}
+
+button > * {
+  pointer-events: none;
 }
 
 nav {
@@ -580,22 +585,21 @@ button.button-no-style {
   height: 100%;
   position: absolute;
 }
-.signup-content button {
-  margin: 20px auto;
-  display: block;
-  width: 300px;
-}
 
 .signup-content button h3 {
   margin: 0;
 }
 
-.signup-content input {
+.signup-content input, .signup-content select {
   width: 100%;
   height: 48px;
   padding: 10px 15px;
   border-radius: 10px;
   border:none;
+  background-color:white;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .signup-content h1, .signup-content a {
@@ -618,10 +622,6 @@ button.button-no-style {
 
 .signup-content.profile-setup h1 {
   text-align: left;
-}
-
-.signup-content p {
-  margin-top: 10px;
 }
 
 .progress-bar {
@@ -648,8 +648,18 @@ div.marker-circle-complete {
 }
 
 .profile-fields .user-icon {
-  margin: 32px auto;
+  margin: 0 auto;
   position: relative;
+}
+
+.signup-content .login-button {
+  margin: 20px auto;
+  display: block;
+  width: 300px;
+}
+
+.profile-fields {
+  margin: 36px;
 }
 
 button.plus {
@@ -661,7 +671,7 @@ button.plus {
   border-radius: 100%;
   position: absolute;
   right: -10px;
-  bottom:-20px;
+  bottom:-25px;
 }
 
 .profile-setup button {
@@ -670,10 +680,38 @@ button.plus {
   justify-content: center;
 }
 
+.submit-field {
+  grid-gap: 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.submit-field.city-state {
+  grid-gap: 16px;
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+}
+
+.submit-field button{
+  height: 40px;
+  padding: 0 24px;
+  width: auto;
+  margin: 28px 0 0 0;
+}
+
+.submit-field button p{
+  font-size: 18px;
+  margin: 0;
+}
+
 
 .profile-setup .setup-field {
   width: 70%;
   margin: 16px auto;
+}
+
+.setup-field > * {
+  margin-top: 16px;
 }
 
 .marker-circle {
@@ -686,11 +724,46 @@ button.plus {
   background-color: white;
 }
 
+.date-field > * {
+  align-self: end;
+}
+
+.date-field {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 16px;
+}
+
 button.setup-next {
   font-family: Roboto;
   font-size: 22px;
   height: 40px;
   width: 20%;
-  margin:32px 0 0 65%;
+  margin:32px 0 0 80%;
+}
 
+.profile-setup .category-card {
+  height: 200px;
+  width: auto;
+}
+
+.profile-setup .category-card-container {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.game-title-list-card {
+  padding: 8px 30px 8px 16px;
+  position: relative;
+  background-color: white;
+  border-radius: 10px;
+  margin: 16px 15%;
+  width: 70%;
+}
+
+.game-title-list-card button{
+  position: absolute;
+  top: 12px;
+  right: 12px;
 }
