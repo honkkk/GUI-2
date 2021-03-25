@@ -13,7 +13,7 @@ const ProgressBar = ({options, current}) => {
           <div className={"marker-circle " + (i+1 === current ? "marker-circle-current ": "") + (i < current-1 ? "marker-circle-complete": "")}>
             {i < current-1 ? check(25, 25): <p>{i+1}</p>}
           </div>
-          <p>{item}</p>
+          <p>{item.mini_name}</p>
         </div>
         {options.length-1 !== i && (
           <div className="progress-step-arrow">

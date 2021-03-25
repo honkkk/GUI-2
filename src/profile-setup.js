@@ -7,37 +7,41 @@ import CategoryCard from "./CategoryCard.js"
 
 const ProfileSetup = () => {
 
-  const [options, setOptions] = useState(["Profile", "Categories", "Games", "Locations"]);
+  // States for the steps, current step, list of games user selects, list of locations user selects
+  const [options, setOptions] = useState([
+    {mini_name: "Profile", full_name: "Profile Setup"},
+    {mini_name: "Categories", full_name: "Owned Games"},
+    {mini_name: "Games", full_name: "Game Type"},
+    {mini_name: "Locations", full_name: "Locationse"}]);
   const [current, setCurrent] = useState(1);
   const [gameList, setGameList] = useState([]);
   const [locationList, setLocationList] = useState([]);
+  // Ability for a button to change users path
   const history = useHistory();
 
-  var section_names= ["Profile Setup", "Game Type", "Owned Games", "Locations", "All set!"]
-
+  // Handles the user adding or removing a game from the list
   const addGame = () => {
     let e = document.getElementById('game-title-profile-setup');
     setGameList([...gameList, e.value]);
     e.value = ""
   }
-
   const removeGame = (e) => {
     setGameList(gameList.filter( (item, index) => index !=e.target.parentElement.dataset.index));
   }
 
+  // Handles a user adding or removing a location from the list
   const addLocation = () => {
     let e_city = document.getElementById('city-profile-setup');
     let e_state = document.getElementById('state-profile-setup');
     setLocationList([...locationList, e_city.value + ", " + e_state.value]);
     e_city.value = "";
   }
-
   const removeLocation = (e) => {
     setLocationList(locationList.filter( (item, index) => index !=e.target.parentElement.dataset.index));
   }
 
+  // Renders the game and location lists
   var gameListRendered = [];
-
   for (var i = 0; i < gameList.length; i++) {
     gameListRendered.push(
       (
@@ -47,9 +51,7 @@ const ProfileSetup = () => {
         </div>)
     );
   }
-
   var locationListRendered = [];
-
   for (var i = 0; i < locationList.length; i++) {
     locationListRendered.push(
       (
@@ -60,10 +62,12 @@ const ProfileSetup = () => {
     );
   }
 
+  // A simple component for the next button
   const next_button = (
     <button className="setup-next" onClick={() => setCurrent(current+1)}>Next</button>
   )
 
+  // All the sections that will be rendered to the user. Display order depends on the value of current
   var sections = [
     (<>
       <div class="user-icon">
@@ -190,12 +194,11 @@ const ProfileSetup = () => {
     </>),
   ]
 
-
-
   return (
     <div className="sign-page">
       <div className="signup-content profile-setup">
-        <h1> {section_names[current-1]} </h1>
+      {/* If we are on a step that exists outside the options range, assume we are all set, and say that*/}
+        <h1> {current > options.length ? "All Set!" : options[current-1].full_name} </h1>
         <ProgressBar options={options} current={current} />
         <div class="profile-fields">
           {sections[current-1]}

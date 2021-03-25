@@ -12,72 +12,77 @@ import {
   NavLink,
 } from "react-router-dom";
 
-// Temp data for events... This will all be tossed into a DB at some point
-var tempEvents = [
+// This comes from the users cookies -> request to server
+var user_data = {
+  username:'andrivard4',
+  id:'13453423',
+  fName:'Andrew',
+  lName:'Rivard',
+};
+
+// Events the user is part of -> request to server with user_data.id
+var user_joined_events = [
   {
-    title:'EPIC GAME NIGHT FUN',
-    date:'Some time',
-    location: 'Lowell, MA',
-    host: 'Andrew',
-    participants: [
-      'Eric',
-      'Cassie',
-      'Tzur'
-    ],
-    categories: [
-      "Board Game",
-      "Video Game"
-    ],
-    games: [
-      'Catan',
-      'Smash Bros'
-    ],
-    capacity: 10,
+    id: '4343423',
+    title: 'Game Night',
+    short_location: 'Lowell, MA',
+    date: 'March 27th',
+    status: 'joined'
   },
   {
-    title:'Gaymer Night',
-    date:'Some time',
-    location: 'Lowell, MA',
-    host: 'Andrew',
-    participants: [
-      'Eric',
-      'Cassie',
-      'Tzur'
-    ],
-    categories: [
-      "Board Game",
-      "Video Game"
-    ],
-    games: [
-      'Catan',
-      'Smash Bros'
-    ],
-    capacity: 10,
+    id: '32432432',
+    title: 'Board Game Time!',
+    short_location: 'Norfolk, MA',
+    date: 'April 3rd',
+    status: 'joined'
   },
   {
-    title:'plz join my gamenight... please',
-    date:'Some time',
-    location: 'Lowell, MA',
-    host: 'Andrew',
-    participants: [
-      'Eric',
-      'Cassie',
-      'Tzur'
-    ],
-    categories: [
-      "Board Game",
-      "Video Game"
-    ],
-    games: [
-      'Catan',
-      'Smash Bros'
-    ],
-    capacity: 10,
+    id: '76784345',
+    title: 'I don\'t know where I am!',
+    short_location: '????, ?????',
+    date: '????? ?????',
+    status: 'pending'
+  },
+  {
+    id: '76784345',
+    title: 'I don\'t know where I am!',
+    short_location: '????, ?????',
+    date: '????? ?????',
+    status: 'joined'
+  },
+  {
+    id: '4343423',
+    title: 'Game Night',
+    short_location: 'Lowell, MA',
+    date: 'March 27th',
+    status: 'joined'
+  },
+  {
+    id: '32432432',
+    title: 'Board Game Time!',
+    short_location: 'Norfolk, MA',
+    date: 'April 3rd',
+    status: 'joined'
+  },
+  {
+    id: '76784345',
+    title: 'I don\'t know where I am!',
+    short_location: '????, ?????',
+    date: '????? ?????',
+    status: 'pending'
+  },
+  {
+    id: '76784345',
+    title: 'I don\'t know where I am!',
+    short_location: '????, ?????',
+    date: '????? ?????',
+    status: 'joined'
   }
-];
+]
 
 // Our main app component
 class App extends Component {
+
   render() {
     return (
       <Router>
@@ -108,7 +113,7 @@ class App extends Component {
                     <TestPage />
                   </Route>
                   <Route path="/feed">
-                    <FeedPage />
+                    <FeedPage user={user_data} upcoming={user_joined_events}/>
                   </Route>
                   <Route path="/profile">
                     <ProfilePage />

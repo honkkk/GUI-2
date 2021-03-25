@@ -7,7 +7,7 @@ import {useState} from 'react';
 // name           (required, string)     name of the event
 // date           (required, string(?))  date for the event
 // toggleButton   (bool)                 to show button for details or not?
-const EventCard = ({location, name, date}) => {
+const EventCard = ({location, name, date, status}) => {
   const [togglePopup, setTogglePopup] = useState(false);
 
   const togglePopupController = () => {
@@ -67,7 +67,7 @@ const EventCard = ({location, name, date}) => {
   return (
     <>
       {togglePopup && details}
-      <div className="event event-card" onClick={togglePopupController} style={{'border-top': '5px solid green'}}>
+      <div className={"event event-card " + (status == "joined" ? "event-joined" : "event-pending")} onClick={togglePopupController}>
         <h3>{name}</h3>
         <div className= "event-card-details">
           {game(22, 22)}

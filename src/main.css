@@ -181,6 +181,14 @@ section {
   margin: 10px;
 }
 
+.event-joined {
+  border-top: 5px solid green;
+}
+
+.event-pending {
+  border-top: 5px solid rgb(244, 197, 0);
+}
+
 /* Style for components of a base event card */
 /* Style for a base event card details, mostly positioning */
 .event-card-details {
