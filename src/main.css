@@ -181,11 +181,19 @@ section {
   margin: 10px;
 }
 
-.event-joined {
+.event-bar.event-joined {
+  border-left: 5px solid green;
+}
+
+.event-card.event-joined {
   border-top: 5px solid green;
 }
 
-.event-pending {
+.event-bar.event-pending {
+  border-left: 5px solid rgb(244, 197, 0);
+}
+
+.event-card.event-pending {
   border-top: 5px solid rgb(244, 197, 0);
 }
 

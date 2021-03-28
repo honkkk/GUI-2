@@ -5,6 +5,58 @@ import CategoryCard from "./CategoryCard.js"
 import {left_arrow, right_arrow} from "./icons.js"
 import {useState} from 'react';
 
+// list of events for the user
+var events = [
+  {
+    id: '4343423',
+    title: 'Game Night',
+    short_location: 'Lowell, MA',
+    date: 'March 27th',
+  },
+  {
+    id: '32432432',
+    title: 'Board Game Time!',
+    short_location: 'Norfolk, MA',
+    date: 'April 3rd',
+  },
+  {
+    id: '76784345',
+    title: 'I don\'t know where I am!',
+    short_location: '????, ?????',
+    date: '????? ?????',
+  },
+  {
+    id: '76784345',
+    title: 'I don\'t know where I am!',
+    short_location: '????, ?????',
+    date: '????? ?????',
+  },
+  {
+    id: '4343423',
+    title: 'Game Night',
+    short_location: 'Lowell, MA',
+    date: 'March 27th',
+  },
+  {
+    id: '32432432',
+    title: 'Board Game Time!',
+    short_location: 'Norfolk, MA',
+    date: 'April 3rd',
+  },
+  {
+    id: '76784345',
+    title: 'I don\'t know where I am!',
+    short_location: '????, ?????',
+    date: '????? ?????',
+  },
+  {
+    id: '76784345',
+    title: 'I don\'t know where I am!',
+    short_location: '????, ?????',
+    date: '????? ?????',
+  }
+]
+
 const FeedPage = ({user, upcoming}) => {
 
   // States to handle selected categories and where upcoming events should show
@@ -16,6 +68,11 @@ const FeedPage = ({user, upcoming}) => {
   let rendered_upcoming_events = [];
   for (var i = upcomingIndex; i < upcoming.length && i < upcomingIndex + 3; i++) {
     rendered_upcoming_events.push(<EventCard key={i} location={upcoming[i].short_location} name={upcoming[i].title} date={upcoming[i].date} id={upcoming[i].id} status={upcoming[i].status}/>)
+  }
+
+  let rendered_events = [];
+  for (var i = 0; i < events.length; i++) {
+    rendered_events.push(<EventBar key={i} location={events[i].short_location} name={events[i].title} date={events[i].date} id={events[i].id}/>)
   }
 
   // Change start index of rendered events
@@ -65,10 +122,7 @@ const FeedPage = ({user, upcoming}) => {
       {/*Needs to be auto generated....*/}
       <section>
       <h2>Events around you </h2>
-        <EventBar />
-        <EventBar />
-        <EventBar />
-        <EventBar />
+        {rendered_events}
       </section>
     </div>
   )
