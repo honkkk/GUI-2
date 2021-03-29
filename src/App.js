@@ -113,7 +113,7 @@ class App extends Component {
                     <TestPage />
                   </Route>
                   <Route path="/feed">
-                    <FeedPage user={user_data} upcoming={user_joined_events}/>
+                    <FeedPage user={user_data} upcoming={user_joined_events}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
                   </Route>
                   <Route path="/profile">
                     <ProfilePage />

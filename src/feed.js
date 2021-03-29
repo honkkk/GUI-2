@@ -2,6 +2,7 @@ import React from "react"
 import EventCard from "./EventCard.js"
 import EventBar from "./EventBar.js"
 import CategoryCard from "./CategoryCard.js"
+import EventCardSlider from "./EventCardSlider.js"
 import {left_arrow, right_arrow} from "./icons.js"
 import {useState} from 'react';
 
@@ -61,27 +62,13 @@ const FeedPage = ({user, upcoming}) => {
 
   // States to handle selected categories and where upcoming events should show
   // NOTE: given time the slider should become its own component
-  const [upcomingIndex, setUpcomingIndex] = useState(0);
   const [categories, setCategories] = useState([]);
-
-  // Renders 3 of the next events to show
-  let rendered_upcoming_events = [];
-  for (var i = upcomingIndex; i < upcoming.length && i < upcomingIndex + 3; i++) {
-    rendered_upcoming_events.push(<EventCard key={i} location={upcoming[i].short_location} name={upcoming[i].title} date={upcoming[i].date} id={upcoming[i].id} status={upcoming[i].status}/>)
-  }
 
   let rendered_events = [];
   for (var i = 0; i < events.length; i++) {
     rendered_events.push(<EventBar key={i} location={events[i].short_location} name={events[i].title} date={events[i].date} id={events[i].id}/>)
   }
 
-  // Change start index of rendered events
-  const left_arrow_handler = () => {
-    setUpcomingIndex(upcomingIndex-3)
-  }
-  const right_arrow_handler = () => {
-    setUpcomingIndex(upcomingIndex+3)
-  }
 
   // Handles changes of what catigories are selcted
   const category_select_handler = (id) => {
@@ -100,13 +87,7 @@ const FeedPage = ({user, upcoming}) => {
       {/*Event cards that will have overflow scrolling ability*/}
       <section>
         <h2>Your upcoming events</h2>
-        <div className="scroll-event-cards">
-          {/*Only show this button if there are cards to show to the left*/}
-          {upcomingIndex != 0 && <button className="button-no-style" onClick={left_arrow_handler}>{left_arrow()}</button>}
-          {rendered_upcoming_events}
-          {/*Only show this button if there are cards to show to the right*/}
-          {upcomingIndex < upcoming.length-3 && <button className="button-no-style" onClick={right_arrow_handler}>{right_arrow()}</button>}
-        </div>
+        <EventCardSlider events={upcoming} size={3} />
       </section>
 
       <section>
