@@ -20,6 +20,9 @@ var user_data = {
   lName:'Rivard',
 };
 
+//This will have to be implemented somehow, but assuming it would be here for now
+var user_games = ["D&D", "monopoly", "exploding kittens", "Chess"]
+
 // Events the user is part of -> request to server with user_data.id
 var user_joined_events = [
   {
@@ -116,7 +119,7 @@ class App extends Component {
                     <FeedPage user={user_data} upcoming={user_joined_events}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
                   </Route>
                   <Route path="/profile">
-                    <ProfilePage />
+                    <ProfilePage user_games ={user_games} upcoming={user_joined_events}/>
                   </Route>
                   <Route path="/create">
                     <CreatePage/>

@@ -5,8 +5,26 @@ import GamesOwned from "./gamesOwned.js"
 import HostedEvents from "./hostedEvents"
 import {user} from "./icons.js"
 import ProfilePic from "./profilePic.PNG"
+import EventCardSlider from "./EventCardSlider.js"
+import GamesPopup from "./GamesPopup.js"
+import AddGamesPopup from "./AddGamesPopup"
+import {useState} from 'react';
 
-const ProfilePage = () => {
+const ProfilePage = ({user_games, upcoming}) => {
+  const [showGamesPopup, setShowGamesPopup] = useState(false)
+  const [showAddGamesPopup, setShowAddGamesPopup] = useState(false)
+
+  const toggleGamesPopup  = () =>{
+    setShowGamesPopup(!showGamesPopup)
+  }
+
+  const toggleAddGamesPopup = () =>{
+    setShowGamesPopup(!showGamesPopup)
+    setShowAddGamesPopup(!showAddGamesPopup)
+  }
+  const closeAddGamesPopup = () =>{
+    setShowAddGamesPopup(!showAddGamesPopup)
+  }
 
   let ret = (
     <div className = "profile-background">
@@ -16,14 +34,18 @@ const ProfilePage = () => {
         <div>
       </div>
       <div className = "profile-buttons">
-      <GamesOwned owned = "7"/><div class="vl"></div><HostedEvents hosted = "1"/>
+        <button className = "button-no-style" onClick = {toggleGamesPopup}>
+          <GamesOwned owned = "7"/>
+        </button>
+        <div class="vl"></div>
+        <HostedEvents hosted = "1"/>
       </div>
       </div>
-      <div className="scroll-full-width scroll-event-cards">
-        <EventCard location="13 Rockwood Rd Norfolk, MA wqewqewqewqeqwewqewqeqweqweqweqwewqeqwewqeq" name="Event Title,  This title might be long" date="Mon. March 13th"/>
-        <EventCard location="13 Rockwood Rd Norfolk, MA" name="Event Title 2" date="Mon. March 33th"/>
-        <EventCard location="13 Rockwood Rd Norfolk, MA wqewqewqewqeqwewqewqeqweqweqweqwewqeqwewqeq" name="Event Title,  This title might be long" date="Mon. March 13th"/>
-      </div>
+      <section>
+        <EventCardSlider events={upcoming} size={3} />
+      </section>
+      {showGamesPopup && <GamesPopup user_games = {user_games} closePopup = {toggleGamesPopup} addGames={toggleAddGamesPopup}/>}
+      {showAddGamesPopup && <AddGamesPopup closePopup ={closeAddGamesPopup}/>}
     </div>
   )
 

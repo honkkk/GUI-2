@@ -19,7 +19,7 @@ const CreatePage = () => {
             <input type="text" placeholder="Game 1"></input>
           </div>
           <div className = "add-game">
-            <button id = "addButton">
+            <button className = "button-no-style">
               <p> Add Game</p>{add(20,20)}
             </button>
           </div>
