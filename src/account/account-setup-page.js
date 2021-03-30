@@ -1,9 +1,9 @@
 import React from "react"
 import {Link, useHistory} from "react-router-dom";
 import {useState} from 'react';
-import {user, arrow_right, plus, del} from "./icons.js"
-import ProgressBar from "./status-bar.js"
-import CategoryCard from "./CategoryCard.js"
+import {user, arrow_right, plus, del} from "../shared/icons.js"
+import ProgressBar from "../shared/status-bar.js"
+import CategoryCard from "../shared/category-card.js"
 
 const ProfileSetup = () => {
 
@@ -16,6 +16,7 @@ const ProfileSetup = () => {
   const [current, setCurrent] = useState(1);
   const [gameList, setGameList] = useState([]);
   const [locationList, setLocationList] = useState([]);
+  const [categories, setCategories] = useState([]);
   // Ability for a button to change users path
   const history = useHistory();
 
@@ -38,6 +39,15 @@ const ProfileSetup = () => {
   }
   const removeLocation = (e) => {
     setLocationList(locationList.filter( (item, index) => index !=e.target.parentElement.dataset.index));
+  }
+
+  // Handles changes of what catigories are selcted
+  const category_select_handler = (id) => {
+    let result = categories.filter( (item) => item != id );
+    if (result.length == categories.length)
+      result.push(id)
+    setCategories(result);
+    console.log(result);
   }
 
   // Renders the game and location lists
@@ -97,10 +107,10 @@ const ProfileSetup = () => {
     (<>
       <h3>What type of games do you play?</h3>
       <div className="category-card-container">
-        <CategoryCard img="http://do512family.com/wp-content/uploads/2020/05/FAM_OnlineGames_HERO.jpg" name="Board Games"/>
-        <CategoryCard img="https://www.wilsoncenter.org/sites/default/files/styles/embed_text_block/public/media/uploads/images/elh-express-jLNbaNzWGL8-unsplash.jpg" name="Video Games"/>
-        <CategoryCard img="https://invisioncommunity.co.uk/wp-content/uploads/2020/02/7-Different-Types-Of-Card-Games.jpg" name="Card Games"/>
-        <CategoryCard img="https://lh3.googleusercontent.com/proxy/EyFpCGHp9hFLvelTEivYO_P-KhXvPjS9JbB3eQLiDQ3om-awRRriZSwhBcMmPm6jtqDvCtI7EAI7kPALof_t02pqkMo-H7EF4zoZqcjq61W11B3Y4Nc-Iv0" name="Role Playing"/>
+        <CategoryCard id={0} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/board.jpg"} name="Board Games"/>
+        <CategoryCard id={1} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/video.jpg"} name="Video Games"/>
+        <CategoryCard id={2} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/card.jpg"} name="Card Games"/>
+        <CategoryCard id={3} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/rp.jpg"} name="Role Playing"/>
       </div>
       {next_button}
     </>),

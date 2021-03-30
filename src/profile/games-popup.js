@@ -1,5 +1,5 @@
 import React from "react"
-import {del} from "./icons.js"
+import {del} from "../shared/icons.js"
 
 const GamesPopup = ({user_games, closePopup, addGames}) => {
 

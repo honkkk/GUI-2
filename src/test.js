@@ -1,6 +1,6 @@
 import React from "react"
-import EventCard from "./EventCard.js"
-import EventBar from "./EventBar.js"
+import EventCard from "./event/event-card.js"
+import EventBar from "./event/event-bar.js"
 
 const TestPage = () => {
 

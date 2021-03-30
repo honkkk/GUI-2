@@ -1,5 +1,5 @@
 import React from "react"
-import {add} from "./icons.js"
+import {add} from "../shared/icons.js"
 const CreatePage = () => {
 
   let ret = (

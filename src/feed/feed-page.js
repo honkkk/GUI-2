@@ -1,9 +1,7 @@
 import React from "react"
-import EventCard from "./EventCard.js"
-import EventBar from "./EventBar.js"
-import CategoryCard from "./CategoryCard.js"
-import EventCardSlider from "./EventCardSlider.js"
-import {left_arrow, right_arrow} from "./icons.js"
+import CategoryCard from "../shared/category-card.js"
+import EventCardCollection from "../event/event-card-collection.js"
+import EventBarCollection from "../event/event-bar-collection.js"
 import {useState} from 'react';
 
 // list of events for the user
@@ -64,11 +62,6 @@ const FeedPage = ({user, upcoming}) => {
   // NOTE: given time the slider should become its own component
   const [categories, setCategories] = useState([]);
 
-  let rendered_events = [];
-  for (var i = 0; i < events.length; i++) {
-    rendered_events.push(<EventBar key={i} location={events[i].short_location} name={events[i].title} date={events[i].date} id={events[i].id}/>)
-  }
-
 
   // Handles changes of what catigories are selcted
   const category_select_handler = (id) => {
@@ -87,23 +80,23 @@ const FeedPage = ({user, upcoming}) => {
       {/*Event cards that will have overflow scrolling ability*/}
       <section>
         <h2>Your upcoming events</h2>
-        <EventCardSlider events={upcoming} size={3} />
+        <EventCardCollection events={upcoming} size={3} />
       </section>
 
       <section>
       <h2>Categories</h2>
       <div className="scroll-full-width">
-        <CategoryCard id={0} onSelect={category_select_handler} img="http://do512family.com/wp-content/uploads/2020/05/FAM_OnlineGames_HERO.jpg" name="Board Games"/>
-        <CategoryCard id={1} onSelect={category_select_handler} img="https://www.wilsoncenter.org/sites/default/files/styles/embed_text_block/public/media/uploads/images/elh-express-jLNbaNzWGL8-unsplash.jpg" name="Video Games"/>
-        <CategoryCard id={2} onSelect={category_select_handler} img="https://invisioncommunity.co.uk/wp-content/uploads/2020/02/7-Different-Types-Of-Card-Games.jpg" name="Card Games"/>
-        <CategoryCard id={3} onSelect={category_select_handler} img="https://lh3.googleusercontent.com/proxy/EyFpCGHp9hFLvelTEivYO_P-KhXvPjS9JbB3eQLiDQ3om-awRRriZSwhBcMmPm6jtqDvCtI7EAI7kPALof_t02pqkMo-H7EF4zoZqcjq61W11B3Y4Nc-Iv0" name="Role Playing"/>
+        <CategoryCard id={0} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/board.jpg"} name="Board Games"/>
+        <CategoryCard id={1} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/video.jpg"} name="Video Games"/>
+        <CategoryCard id={2} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/card.jpg"} name="Card Games"/>
+        <CategoryCard id={3} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/rp.jpg"} name="Role Playing"/>
       </div>
       </section>
 
       {/*Needs to be auto generated....*/}
       <section>
-      <h2>Events around you </h2>
-        {rendered_events}
+        <h2>Events around you </h2>
+        <EventBarCollection events={events} size={5}/>
       </section>
     </div>
   )

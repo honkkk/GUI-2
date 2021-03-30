@@ -1,7 +1,7 @@
 import React from "react"
-import {game, dice, clock, user, del} from "./icons.js"
-import UserList from "./userList.js"
-import EventPopup from './EventPopup.js'
+import {game, dice, clock, user, del} from "../shared/icons.js"
+import UserList from "../shared/user-list.js"
+import EventPopup from './event-popup.js'
 import {useState} from 'react';
 
 // EventBar component is used to show events in a bar format
@@ -9,7 +9,7 @@ import {useState} from 'react';
 // name           (required, string)     name of the event
 // date           (required, string(?))  date for the event
 // users          (required, [user])     a list of the users at the event
-const EventCard = ({location, name, date, status}) => {
+const EventBar = ({location, name, date, status, id}) => {
 
   const [togglePopup, setTogglePopup] = useState(false);
 
@@ -22,7 +22,7 @@ const EventCard = ({location, name, date, status}) => {
 
   let ret = (
     <>
-      {togglePopup && <EventPopup togglePopupController={togglePopupController} status={status}/>}
+      {togglePopup && <EventPopup togglePopupController={togglePopupController} status={status} name={name} id={id}/>}
       <div className={"event event-bar " + (status == "joined" ? "event-joined " : "") + (status == "pending" ? "event-pending " : "")}>
         <button className="event-bar-expand" onClick={togglePopupController}> <p>Details</p></button>
         <div className="event-user-status user-icon-list">
@@ -46,4 +46,4 @@ const EventCard = ({location, name, date, status}) => {
   return ret;
 }
 
-export default EventCard
+export default EventBar

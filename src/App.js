@@ -1,10 +1,10 @@
 import React, { Component } from "react"
-import FeedPage from "./feed.js"
-import ProfilePage from "./profile.js"
+import FeedPage from "./feed/feed-page.js"
+import ProfilePage from "./profile/profile-page.js"
 import TestPage from "./test.js"
-import CreatePage from "./create.js"
-import SignPage from "./signin.js"
-import ProfileSetup from "./profile-setup.js"
+import CreatePage from "./create/create-page.js"
+import SignPage from "./account/account-signup-page.js"
+import ProfileSetup from "./account/account-setup-page.js"
 import {
   BrowserRouter as Router,
   Switch,

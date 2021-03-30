@@ -1,11 +1,9 @@
 import React from "react"
-import EventCard from "./EventCard.js"
-import EventBar from "./EventBar.js"
-import CategoryCard from "./CategoryCard.js"
-import {left_arrow, right_arrow} from "./icons.js"
+import EventCard from "./event-card.js"
+import {left_arrow, right_arrow} from "../shared/icons.js"
 import {useState} from 'react';
 
-const EventCardSlider = ({events, size}) => {
+const EventCardCollection = ({events, size}) => {
 
   // States to handle selected categories and where upcoming events should show
   // NOTE: given time the slider should become its own component
@@ -14,7 +12,7 @@ const EventCardSlider = ({events, size}) => {
   // Renders 3 of the next events to show
   let rendered_upcoming_events = [];
   for (var i = upcomingIndex; i < events.length && i < upcomingIndex + size; i++) {
-    rendered_upcoming_events.push(<EventCard key={i} location={events[i].short_location} name={events[i].title} date={events[i].date} id={events[i].id} status={events[i].status}/>)
+    rendered_upcoming_events.push(<EventCard key={i} location={events[i].short_location} id={events[i].id} name={events[i].title} date={events[i].date} id={events[i].id} status={events[i].status}/>)
   }
 
   // Change start index of rendered events
@@ -38,4 +36,4 @@ const EventCardSlider = ({events, size}) => {
 
 }
 
-export default EventCardSlider
+export default EventCardCollection
