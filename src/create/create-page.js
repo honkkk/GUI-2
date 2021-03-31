@@ -23,7 +23,7 @@ const CreatePage = () => {
               <p> Add Game</p>{add(20,20)}
             </button>
           </div>
-          <div class="game-tags">
+          <div className="game-tags">
             <input type="checkbox" name="createRPG" id="createRPG"/>
             <input type="checkbox" name="createBG" id="createBG" />
             <input type="checkbox" name="createCG" id="createCG" />

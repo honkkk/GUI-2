@@ -34,7 +34,7 @@ const ProfilePage = ({user_games, upcoming}) => {
         <button className = "button-no-style" onClick = {toggleGamesPopup}>
           <GamesOwned owned = "7"/>
         </button>
-        <div class="vl"></div>
+        <div className="vl"></div>
         <HostedEvents hosted = "1"/>
       </div>
       </div>

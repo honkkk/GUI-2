@@ -590,10 +590,10 @@ button.button-no-style {
   width: 100px;
 }
 .sign-page{
-  background-color: rgb(58, 38, 99);
+  background-color: #A9D6E5;
   background-repeat:repeat-x;
   background-position:bottom;
-  background-image: url('https://us.123rf.com/450wm/pskov/pskov1809/pskov180900015/109673905-.jpg?ver=6');
+  background-image: url('dither.png');
   z-index: 0;
   top: 0;
   left: 0;
@@ -626,10 +626,13 @@ button.button-no-style {
 
 .signup-content {
   border-radius: 10px;
-  margin: 200px auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   padding: 50px 70px 40px;
   width: 600px;
-  background-color: rgba(214, 214, 214, 0.4);
+  background-color: rgba(83, 120, 164, 0.7);
 }
 
 .signup-content.profile-setup {
@@ -740,13 +743,19 @@ button.plus {
   background-color: white;
 }
 
-.date-field > * {
+.date-field > *, .name-field > * {
   align-self: end;
 }
 
 .date-field {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 16px;
+}
+
+.name-field {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   grid-gap: 16px;
 }
 

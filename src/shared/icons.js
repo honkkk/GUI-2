@@ -44,7 +44,7 @@ export function dice(width=50, height=50) {
 
 export function game(width=50, height=50) {
   return (
-    <svg enable-background="new 0 0 512 512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width={width} height={height} style={{"fill":"#000000"}}>
+    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width={width} height={height} style={{"fill":"#000000"}}>
       <g>
         <g>
           <path d="m256 480c-15.079 0-29.075-7.49-37.441-20.037l-65.157-97.735c-17.193 1.467-32.605 10.796-41.872 25.622l-33.526 53.64c-4.582 7.333-7.004 15.779-7.004 24.425 0 25.411 20.674 46.085 46.085 46.085h277.83c25.411 0 46.085-20.674 46.085-46.085 0-8.647-2.422-17.093-7.005-24.425l-33.525-53.64c-9.266-14.826-24.679-24.155-41.872-25.622l-65.156 97.733c-8.367 12.549-22.363 20.039-37.442 20.039z"/>

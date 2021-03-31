@@ -8,7 +8,7 @@ const CategoryCardCollection = ({categories, selectHandler}) => {
   let renderedCategoryCards = []
 
   categories.forEach((item, i) => {
-    renderedCategoryCards.push(<CategoryCard id={i} onSelect={selectHandler} img={process.env.PUBLIC_URL + item.img} name={item.name}/>)
+    renderedCategoryCards.push(<CategoryCard key={i} id={i} onSelect={selectHandler} img={process.env.PUBLIC_URL + item.img} name={item.name} checked={item.selected}/>)
   });
 
 

@@ -8,29 +8,15 @@ import ProfileSetup from "./profile-setup.js"
 import GameTypes from "./game-types.js"
 import OwnedGames from "./owned-games.js"
 
-const Location = ({nextHandler}) => {
+const Location = ({nextHandler, locationList, addLocationHandler, removeLocationHandler, backHandler}) => {
 
-  // States for the steps, current step, list of games user selects, list of locations user selects
-  const [locationList, setLocationList] = useState([]);
-
-
-  // Handles a user adding or removing a location from the list
-  const addLocation = () => {
-    let e_city = document.getElementById('city-profile-setup');
-    let e_state = document.getElementById('state-profile-setup');
-    setLocationList([...locationList, e_city.value + ", " + e_state.value]);
-    e_city.value = "";
-  }
-  const removeLocation = (e) => {
-    setLocationList(locationList.filter( (item, index) => index !=e.target.parentElement.dataset.index));
-  }
   var locationListRendered = [];
   for (var i = 0; i < locationList.length; i++) {
     locationListRendered.push(
       (
         <div key={i} data-index={i} className="game-title-list-card">
           <p>{locationList[i]}</p>
-          <button className="button-no-style" onClick={removeLocation}>{del(15, 15)}</button>
+          <button className="button-no-style" onClick={removeLocationHandler}>{del(15, 15)}</button>
         </div>)
     );
   }
@@ -39,7 +25,7 @@ const Location = ({nextHandler}) => {
 
   return (<>
     <h3>Where do you want to join events?</h3>
-    <div class="submit-field city-state">
+    <div className="submit-field city-state">
       <label>
         <p> City </p>
         <input type="text" id="city-profile-setup"/>
@@ -100,9 +86,10 @@ const Location = ({nextHandler}) => {
         	<option value="WY">Wyoming</option>
         </select>
       </label>
-      <button onClick={addLocation}> <p>Add</p> </button>
+      <button onClick={addLocationHandler}> <p>Add</p> </button>
     </div>
     {locationListRendered}
+    <button className="setup-next" onClick={backHandler}>Back</button>
     <button className="setup-next" onClick={nextHandler}>Next</button>
   </>)
 }

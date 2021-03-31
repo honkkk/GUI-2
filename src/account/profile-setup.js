@@ -1,29 +1,38 @@
 import React from "react"
 import {user, plus} from "../shared/icons.js"
 
-const ProfileSetup = ({nextHandler}) => {
+const ProfileSetup = ({nextHandler, changeHandler, userData}) => {
 
   // All the sections that will be rendered to the user. Display order depends on the value of current
   return (<>
-      <div class="user-icon">
+      <div className="user-icon">
         {user(75, 75)}
-        <button class="plus">{plus(20, 20)}</button>
+        <button className="plus">{plus(20, 20)}</button>
       </div>
       <div className="setup-field">
         <label>
           <p> Username </p>
-          <input type="text"/>
+          <input id="username" type="text" onChange={changeHandler} value={userData.username}/>
         </label>
+        <div className="name-field">
+          <label>
+            <p> Name </p>
+            <input id="fName" type="text" placeholder="First" onChange={changeHandler} value={userData.fName}/>
+          </label>
+          <label>
+            <input id="lName" type="text" placeholder="Last" onChange={changeHandler} value={userData.lName}/>
+          </label>
+        </div>
         <div className="date-field">
           <label>
             <p> Birthday </p>
-            <input type="text" placeholder="Day"/>
+            <input id="day" type="text" placeholder="Day" onChange={changeHandler} value={userData.day}/>
           </label>
           <label>
-            <input type="text" placeholder="Month"/>
+            <input id="month" type="text" placeholder="Month" onChange={changeHandler} value={userData.month}/>
           </label>
           <label>
-            <input type="text" placeholder="Year"/>
+            <input id="year" type="text" placeholder="Year" onChange={changeHandler} value={userData.year}/>
           </label>
         </div>
       </div>

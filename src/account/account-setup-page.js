@@ -11,17 +11,14 @@ import Location from "./location.js"
 
 const AccountSetup = () => {
 
-  // States for the steps, current step, list of games user selects, list of locations user selects
-  const [options, setOptions] = useState([
-    {mini_name: "Profile", full_name: "Profile Setup"},
-    {mini_name: "Categories", full_name: "Game Type"},
-    {mini_name: "Games", full_name: "Owned Games"},
-    {mini_name: "Locations", full_name: "Locations"}]);
+  // Ability for a button to change users path
+  const history = useHistory();
+  // Current page to display
   const [current, setCurrent] = useState(1);
+  // List of selected games and locations
   const [gameList, setGameList] = useState([]);
   const [locationList, setLocationList] = useState([]);
-
-  // Current game catigories to select from
+  // Current game catigories to select from and if they are selected
   const [categories, setCategories] = useState([
     {
       name:"Board Games",
@@ -44,8 +41,19 @@ const AccountSetup = () => {
       selected: false
     },
   ]);
-  // Ability for a button to change users path
-  const history = useHistory();
+  // Data for the user
+  const [userData, setUserData] = useState({
+    username:'',
+    fName:'',
+    lName:'',
+    day:'',
+    month: '',
+    year: ''
+  });
+
+  const userDataHandler = (e) => {
+    setUserData ({...userData, [e.target.id]:e.target.value})
+  }
 
   // Handles the user adding or removing a game from the list
   const addGame = () => {
@@ -69,26 +77,34 @@ const AccountSetup = () => {
   }
 
   // Handles changes of what catigories are selcted
+  // NOTE: This will be used for feed too...
   const category_select_handler = (id) => {
     let category = categories[id];
     category.selected = !category.selected;
-
-    console.log(categories.slice(0, id));
-    console.log(categories.slice(id+1));
+    setCategories([...categories.slice(0, id), category, ...categories.slice(id+1)])
   }
 
+  // List of pages to show for setup
+  const options = [
+    {mini_name: "Profile", full_name: "Profile Setup"},
+    {mini_name: "Categories", full_name: "Game Type"},
+    {mini_name: "Games", full_name: "Owned Games"},
+    {mini_name: "Locations", full_name: "Locations"}
+  ]
+
   // All the sections that will be rendered to the user. Display order depends on the value of current
-  var sections = [
-    <ProfileSetup nextHandler={() => setCurrent(current+1)}/>,
-    <GameTypes nextHandler={() => setCurrent(current+1)} categories={categories} categorySelectHandler={category_select_handler}/>,
-    <OwnedGames nextHandler={() => setCurrent(current+1)}/>,
-    <Location nextHandler={() => setCurrent(current+1)}/>,
+  const sections = [
+    <ProfileSetup nextHandler={() => setCurrent(current+1)} changeHandler={userDataHandler} userData={userData}/>,
+    <GameTypes nextHandler={() => setCurrent(current+1)} backHandler={() => setCurrent(current-1)} categories={categories} categorySelectHandler={category_select_handler}/>,
+    <OwnedGames nextHandler={() => setCurrent(current+1)} backHandler={() => setCurrent(current-1)} addGameHandler={addGame} removeGameHandler={removeGame} gameList={gameList}/>,
+    <Location nextHandler={() => setCurrent(current+1)} backHandler={() => setCurrent(current-1)} addLocationHandler={addLocation} removeLocationHandler={removeLocation} locationList={locationList}/>,
     (<>
       <h3> Here's what your profile looks like! </h3>
-      <div class="user-icon">
+      <div className="user-icon">
         {user(75, 75)}
       </div>
-      <p style={{'textAlign':'center'}}>@Username - 19 years old</p>
+      <p style={{'textAlign':'center'}}>{userData.username}</p>
+      <button className="setup-next" onClick={() => setCurrent(current-1)}>Back</button>
       <button className="setup-next" onClick={() => history.push('/feed')}>Finish</button>
     </>),
   ]
@@ -99,7 +115,7 @@ const AccountSetup = () => {
       {/* If we are on a step that exists outside the options range, assume we are all set, and say that*/}
         <h1> {current > options.length ? "All Set!" : options[current-1].full_name} </h1>
         <ProgressBar options={options} current={current} />
-        <div class="profile-fields">
+        <div className="profile-fields">
           {sections[current-1]}
         </div>
       </div>
