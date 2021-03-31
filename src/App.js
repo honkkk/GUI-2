@@ -4,7 +4,7 @@ import ProfilePage from "./profile/profile-page.js"
 import TestPage from "./test.js"
 import CreatePage from "./create/create-page.js"
 import SignPage from "./account/account-signup-page.js"
-import ProfileSetup from "./account/account-setup-page.js"
+import AccountSetup from "./account/account-setup-page.js"
 import {
   BrowserRouter as Router,
   Switch,
@@ -95,7 +95,7 @@ class App extends Component {
               <SignPage/>
             </Route>
             <Route exact path="/profile-setup">
-              <ProfileSetup/>
+              <AccountSetup/>
             </Route>
             <Route>
               <header className="App-header">
