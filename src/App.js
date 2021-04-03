@@ -18,6 +18,8 @@ var user_data = {
   id:'13453423',
   fName:'Andrew',
   lName:'Rivard',
+  state: 'MA',
+  city: 'Lowell'
 };
 
 //This will have to be implemented somehow, but assuming it would be here for now
@@ -27,62 +29,72 @@ var user_games = ["D&D", "monopoly", "exploding kittens", "Chess"]
 var user_joined_events = [
   {
     id: '4343423',
-    title: 'Game Night',
+    title: 'Game Night hosted by thee andre & rivard',
     short_location: 'Lowell, MA',
     date: 'March 27th',
-    status: 'joined'
+    status: 'joined',
+    host: 'andrivard4'
   },
   {
     id: '32432432',
     title: 'Board Game Time!',
     short_location: 'Norfolk, MA',
     date: 'April 3rd',
-    status: 'joined'
+    status: 'joined',
+    host: 'honklover420'
   },
   {
     id: '76784345',
     title: 'I don\'t know where I am!',
     short_location: '????, ?????',
     date: '????? ?????',
-    status: 'pending'
+    status: 'pending',
+    host: 'poojna123'
   },
   {
     id: '76784345',
-    title: 'I don\'t know where I am!',
+    title: 'I don\'t know where I am! hosted by ME',
     short_location: '????, ?????',
     date: '????? ?????',
-    status: 'joined'
+    status: 'joined',
+    host: 'andrivard4'
   },
   {
     id: '4343423',
-    title: 'Game Night',
+    title: 'Game Night hosted by MEEEE',
     short_location: 'Lowell, MA',
     date: 'March 27th',
-    status: 'joined'
+    status: 'joined',
+    host: 'honklover420'
   },
   {
     id: '32432432',
     title: 'Board Game Time!',
     short_location: 'Norfolk, MA',
     date: 'April 3rd',
-    status: 'joined'
+    status: 'joined',
+    host: 'honklover420'
   },
   {
     id: '76784345',
     title: 'I don\'t know where I am!',
     short_location: '????, ?????',
     date: '????? ?????',
-    status: 'pending'
+    status: 'pending',
+    host: 'honklover420'
   },
   {
     id: '76784345',
     title: 'I don\'t know where I am!',
     short_location: '????, ?????',
     date: '????? ?????',
-    status: 'joined'
+    status: 'joined',
+    host: 'honklover420'
   }
 ]
-
+const addGame = (games) => {
+  alert('A name was submitted: ' + games.join(', '));
+}
 // Our main app component
 class App extends Component {
 
@@ -119,7 +131,7 @@ class App extends Component {
                     <FeedPage user={user_data} upcoming={user_joined_events}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
                   </Route>
                   <Route path="/profile">
-                    <ProfilePage user_games ={user_games} upcoming={user_joined_events}/>
+                    <ProfilePage user_data = {user_data} user_games ={user_games} upcoming={user_joined_events} addGame = {addGame}/>
                   </Route>
                   <Route path="/create">
                     <CreatePage/>
