@@ -1,6 +1,40 @@
 import React from "react"
-import {add} from "../shared/icons.js"
+import {add, del} from "../shared/icons.js"
+import {useState} from 'react';
+
+
 const CreatePage = () => {
+  const [games, setGames] = useState([]);
+  const removeClick = (e) => {
+    setGames(games.filter( (item, index) => index !=e.target.parentElement.dataset.index));
+    e.preventDefault();
+  }
+  var createInputs = games.map(( el,i) => (
+      <div key={"gaymer-" + i} className = "create-input" data-index={i}>
+        <label>Game {i+2}:</label>
+        <input type="text" data-index={i} value = {el} onChange={handleChange} />
+        <button data-index={i} className = "button-no-style" onClick={removeClick}>{del(20,20)}</button>
+      </div> )
+  );
+  function handleChange(event) {
+      let newGames = [...games];
+      newGames[event.target.dataset.index] = event.target.value;
+      setGames(newGames);
+      console.log(event.target.dataset.index)
+      console.log(event.target.value)
+  }
+  const addClick = (event) => {
+      setGames([...games, event.target.value])
+      event.preventDefault();
+  }
+  const handleSubmit = event => {
+      let data = [];
+      data[0] = document.getElementById('first-game').value;
+      for (var i = 0; i < games.length; i++) {
+        data[i+1]=games[i]
+      }
+      event.preventDefault();
+  }
 
   let ret = (
     <form>
@@ -18,8 +52,9 @@ const CreatePage = () => {
             <label>Game 1:</label>
             <input type="text" placeholder="Game 1"></input>
           </div>
+          {createInputs}
           <div className = "add-game">
-            <button className = "button-no-style">
+            <button className = "button-no-style" onClick = {addClick}>
               <p> Add Game</p>{add(20,20)}
             </button>
           </div>
