@@ -3,6 +3,8 @@ const serverless = require('serverless-http');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+const accountRouter = require('./account.js')
+
 const app = express();
 const apiRouter = express.Router();
 
@@ -14,8 +16,10 @@ app.use(cookieParser());
 
 // Get on the base
 apiRouter.get("/", (req, res) => {
-  res.send(req.body);
+  res.send("At root!");
 })
+
+apiRouter.use("/account", accountRouter);
 
 
 app.use("/.netlify/functions/api", apiRouter)
