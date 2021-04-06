@@ -108,6 +108,12 @@ accountRouter.post("/create", async (req, res) => {
     return;
   }
 
+  const pw_re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,32}$/;
+  if (!pw_re.test(password)) {
+    res.status(400).send("Password does not meet requirements. Must contain an uppercase and lowercase letter, a number, and be 8 to 32 characters long.");
+    return;
+  }
+
   // Prevents same email with different case from being used
   email = email.toLowerCase();
 
@@ -121,7 +127,7 @@ accountRouter.post("/create", async (req, res) => {
       q.Create(
         q.Collection("user"),
         {
-          data: {email, hashed_password, salt}
+          data: {email, hashed_password, salt, status: "pending",}
         }
       )
     )
