@@ -27,7 +27,7 @@ setupRouter.use("/", async (req, res, next) => {
   req.body.user = null;
   const {session} = req.body;
   if (session == null) {
-    res.status(401).send("Not authorized to view this page!")
+    res.status(401).send({status: 'error', server_message: "Not authorized to view this page!", error_message: "020"})
     return;
   }
 
@@ -43,11 +43,11 @@ setupRouter.use("/", async (req, res, next) => {
       )
     )
     if (!req.body.user) {
-      res.status(401).send("Not authorized to view this page (session not found)!")
+      res.status(401).send({status: 'error', server_message: "Not authorized to view this page (session not found)!", error_message: "020"})
       return;
     }
   } catch(error) {
-    res.status(500).send("internal error: " + error.message)
+    res.status(500).send({status: 'error', server_message: "an internal error occured", error_message: error.message})
     return;
   }
   next();
@@ -63,13 +63,13 @@ setupRouter.use("/", async (req, res, next) => {
 //  - success / failure
 // Actions:
 //  - updates user info
-//  - sets user status to "prefrences"
+//  - sets user status to "preferences"
 setupRouter.post("/user", async (req, res) => {
   let {user, username, birth_year, birth_month, birth_day} = req.body;
 
   // Validate existence of user and username
   if (user == null || username == null) {
-    res.status(400).send("Data is missing from this request.")
+    res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
     return;
   }
 
@@ -78,12 +78,12 @@ setupRouter.post("/user", async (req, res) => {
   if (date.getDate() != birth_day || date.getFullYear() != birth_year ||
       date.getMonth() != birth_month || birth_year > 2100 || birth_month > 11 ||
       birth_day > 31 || birth_year < 1900 || birth_month < 0 || birth_day < 0) {
-    res.status(400).send("Incorrect or missing date format, try again!")
+    res.status(400).send({status: 'error', server_message: "Incorrect or missing date, try again.", error_message: "000"})
     return;
   }
   // Validates DOB is in the past
   if (date.getTime() >= Date.now()) {
-    res.status(400).send("We know you wern't just born...")
+    res.status(400).send({status: 'error', server_message: "Invalid date. Please provide a real date of birth...", error_message: "002"})
     return;
   }
 
@@ -91,7 +91,7 @@ setupRouter.post("/user", async (req, res) => {
   let re = /^[a-z]([a-z,0-9]?){4,15}$/
   username = username.toLowerCase();
   if (!re.test(username)) {
-    res.status(400).send("Invalid username. Username must start with a letter, only contain letters and numbers, and be between 5 and 16 characters long.")
+    res.status(400).send({status: 'error', server_message: "Invalid username format. Username must start with a letter, only contain letters and numbers, and be between 5 and 16 characters long.", error_message: "002"})
     return;
   }
 
@@ -104,11 +104,11 @@ setupRouter.post("/user", async (req, res) => {
       )
     )
     if (!result) {
-      res.status(401).send("User data cannot be set right now!")
+      res.status(401).send({status: 'error', server_message: "Not allowed to update profile right now.", error_message: "030"})
       return;
     }
   } catch(error) {
-    res.status(500).send("internal error: " + error.message)
+    res.status(500).send({status: 'error', server_message: "an internal error occured", error_message: error.message})
     return;
   }
 
@@ -127,13 +127,13 @@ setupRouter.post("/user", async (req, res) => {
       )
     )
   } catch(error) {
-    res.status(500).send("internal error: " + error.message);
+    res.status(500).send({status: 'error', server_message: "an internal error occured", error_message: error.message})
     return;
   }
-  res.send("User updated!")
+  res.send({status:'success', message:"User profile setup complete!"});
 });
 
-// Sets user prefrences
+// Sets user preferences
 // Expects:
 // Body:
 //  - locations : [{town : string (toLower), state : string (toLower)}]
@@ -148,7 +148,7 @@ setupRouter.post("/user", async (req, res) => {
 setupRouter.post("/preferences", async (req, res) => {
   let {user, locations, categories, games} = req.body;
   if (user == null || locations == null || categories == null || games == null) {
-    res.status(400).send("Data is missing from this request.");
+    res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
     return;
   }
 
@@ -160,11 +160,11 @@ setupRouter.post("/preferences", async (req, res) => {
       )
     )
     if (!result) {
-      res.status(401).send("Preferences data cannot be set right now!")
+      res.status(401).send({status: 'error', server_message: "Not allowed to update profile right now.", error_message: "030"})
       return;
     }
   } catch(error) {
-    res.status(500).send("internal error: " + error.message)
+    res.status(500).send({status: 'error', server_message: "an internal error occured", error_message: error.message})
     return;
   }
 
@@ -174,7 +174,7 @@ setupRouter.post("/preferences", async (req, res) => {
     categories = JSON.parse(categories)
     games = JSON.parse(games)
   } catch(error) {
-    res.status(500).send("internal error occured: " + error.message)
+    res.status(500).send({status: 'error', server_message: "an internal error occured", error_message: error.message})
     return;
   }
 
@@ -209,10 +209,10 @@ setupRouter.post("/preferences", async (req, res) => {
       )
     )
   } catch (error) {
-    res.status(500).send("internal error: " + error.message);
+    res.status(500).send({status: 'error', server_message: "an internal error occured", error_message: error.message})
     return;
   }
-  res.send("Post on /preferences")
+  res.send({status:'success', message:"User preferences setup complete!"});
 });
 
 module.exports = setupRouter;

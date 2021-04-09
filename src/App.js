@@ -1,10 +1,12 @@
-import React, { Component } from "react"
+import React, { useEffect } from "react"
 import FeedPage from "./feed/feed-page.js"
 import ProfilePage from "./profile/profile-page.js"
 import TestPage from "./test.js"
 import CreatePage from "./create/create-page.js"
 import SignPage from "./account/account-signup-page.js"
 import AccountSetup from "./account/account-setup-page.js"
+import { CookiesProvider } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import {
   BrowserRouter as Router,
   Switch,
@@ -96,11 +98,55 @@ const addGame = (games) => {
   alert('A name was submitted: ' + games.join(', '));
 }
 // Our main app component
-class App extends Component {
+const App = () => {
 
-  render() {
-    return (
-      <Router>
+  const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
+
+  useEffect(() => {
+    if (!cookies.token) {
+      if (window.location.pathname != "/") {
+        console.log(window.location.pathname);
+        window.location.pathname = "/"
+      }
+      return;
+    }
+    fetch("http://localhost:8888/.netlify/functions/api/account/status",
+    {
+      method:'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        session:cookies.token
+      })
+    })
+    .then(function(response) {
+      return response.json()
+    })
+    .then(function(response) {
+      if (response.status == null) {
+        throw Error(response.statusText)
+      }
+      if (response.status == "error")
+        throw Error(response.server_message + ", " + response.error_message)
+      if (response.status == "success") {
+        if (!response.message) {
+          console.log(response.message);
+          removeCookie("token");
+          window.location.href = './'
+        }
+      }
+    })
+    .catch(function(error) {
+      removeCookie("token");
+      window.location.href = './'
+      console.log(error);
+    })
+  })
+
+  return (
+    <Router>
+      <CookiesProvider>
         <div className="App">
           <Switch>
             <Route exact path="/">
@@ -141,9 +187,9 @@ class App extends Component {
             </Route>
           </Switch>
         </div>
-      </ Router>
-    )
-  }
+      </CookiesProvider>
+    </ Router>
+  )
 }
 
 export default App

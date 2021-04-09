@@ -24,11 +24,11 @@ accountRouter.get("/", (req, res) => {
 accountRouter.post("/login", async (req, res) => {
   const {email, password} = req.body;
   if (email == null || password == null) {
-    res.status(400).send("Data is missing from this request.")
+    res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
     return;
   }
   if (!validateEmail(email)) {
-    res.status(400).send("Email is not valid.")
+    res.status(400).send({status: 'error', server_message: "Invalid email format.", error_message: "002"})
     return;
   }
 
@@ -44,17 +44,17 @@ accountRouter.post("/login", async (req, res) => {
       )
     )
     if (!response) {
-      res.status(404).send("Account not found!")
+      res.status(400).send({status: 'error', server_message: "Account not found, please create an account!", error_message: "100"})
       return;
     }
     user = response;
   } catch (error) {
-    res.status(500).send("internal error: " + error.message)
+    res.status(500).send({status: 'error', server_message: "an internal error occured", error_message: error.message})
   }
 
   // check hashed password against what we have
   if (user.data.hashed_password != getHashedPassword(password, user.data.salt)) {
-    res.status(401).send("Incorrect email/password");
+    res.status(401).send({status: 'error', server_message: "Incorrect email/password", error_message: "010"})
     return;
   }
 
@@ -72,9 +72,9 @@ accountRouter.post("/login", async (req, res) => {
       )
     )
     req.body.session = response.data.token;
-    res.send(req.body.session);
+    res.send({status:'success', token:req.body.session});
   } catch (error) {
-    res.status(500).send("Issue signing in, try again: " + error.message);
+    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in", error_message: error.message})
     return;
   }
 });
@@ -96,21 +96,21 @@ accountRouter.post("/create", async (req, res) => {
   var {email, conf_email, password, conf_password} = req.body;
   // Input cleaning
   if (email == null || password == null) {
-    res.status(400).send("Data is missing from this request.");
+    res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
     return;
   }
   if (email.toLowerCase() != conf_email.toLowerCase() || password != conf_password) {
-    res.status(400).send("Email or password missmatch");
+    res.status(400).send({status: 'error', server_message: "Email or password missmatch", error_message: "001"})
     return;
   }
   if (!validateEmail(email)) {
-    res.status(400).send("Invalid email format");
+    res.status(400).send({status: 'error', server_message: "Invalid email format.", error_message: "002"})
     return;
   }
 
   const pw_re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,32}$/;
   if (!pw_re.test(password)) {
-    res.status(400).send("Password does not meet requirements. Must contain an uppercase and lowercase letter, a number, and be 8 to 32 characters long.");
+    res.status(400).send({status: 'error', server_message: "Password does not meet requirements. Must contain an uppercase and lowercase letter, a number, and be 8 to 32 characters long.", error_message: "003"})
     return;
   }
 
@@ -133,10 +133,10 @@ accountRouter.post("/create", async (req, res) => {
     )
   } catch (error) {
     if (error.message == "instance not unique") {
-      res.status(400).send("Email already registered!");
+      res.status(400).send({status: 'error', server_message: "Email already registered!", error_message: error.message})
       return;
     }
-    res.status(500).send(error.message);
+    res.status(500).send({status: 'error', server_message: "an internal error occured", error_message: error.message})
   }
 
   try {
@@ -154,11 +154,44 @@ accountRouter.post("/create", async (req, res) => {
     )
     req.body.session = response.data.token;
   } catch (error) {
-    res.status(500).send("Issue signing in, try again: " + error.message);
+    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
     return;
   }
   // Returns user to client
-  res.send(req.body.session)
+  res.send({status:'success', token:req.body.session});
+});
+
+// Returns if the user is logged in or not
+// Expects:
+// Body:
+//  - session : string
+// Returns:
+//  - true or false
+accountRouter.post("/status", async (req, res) => {
+  var {session} = req.body;
+  // Input cleaning
+  if (session == null) {
+    res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
+    return;
+  }
+
+  try {
+    const response = await adminClient.query(
+      q.Get(
+        q.Match(
+          q.Index("get_user_from_session"), session
+        )
+      )
+    )
+    res.send({status:"success", message:true})
+  } catch (error) {
+    if (error.message == "instance not found") {
+      res.send({status:"success", message:false})
+      return;
+    }
+    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
+    return;
+  }
 });
 
 // Route for setting up account, requirements and responses pending...
