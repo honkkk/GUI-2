@@ -60,6 +60,12 @@ const AccountSetup = () => {
     setUserData ({...userData, [e.target.id]:e.target.value})
   }
 
+  const errorHandler = (error_message) => {
+    const error = document.getElementById('error');
+    error.style.display = 'block';
+    error.innerHTML = error_message;
+  }
+
   // Handles the user adding or removing a game from the list
   const addGame = () => {
     let e = document.getElementById('game-title-profile-setup');
@@ -90,6 +96,8 @@ const AccountSetup = () => {
   }
 
   const onPrefSubmit = () => {
+
+    document.getElementById('error').style.display = "none";
 
     const reduced_categories = categories.map( item =>  {
         return {id: item.id, selected: item.selected}
@@ -124,12 +132,14 @@ const AccountSetup = () => {
       }
     })
     .catch(function(error) {
+      errorHandler(error);
       console.log(error);
     })
-    //document.location.href = "./feed";
   }
 
   const onProfileSubmit = () => {
+
+    document.getElementById('error').style.display = "none";
 
     if (userDataSet) {
       setCurrent(current+1);
@@ -142,28 +152,26 @@ const AccountSetup = () => {
     if (date.getDate() != day || date.getFullYear() != year ||
         date.getMonth() != month || year > 2100 || month > 11 ||
         day > 31 || year < 1900 || month < 0 || day < 0) {
-      alert("Incorrect or missing date, try again.")
+      errorHandler("Incorrect or missing date, try again.")
       return;
     }
     // Validates DOB is in the past
     if (date.getTime() >= Date.now()) {
-      alert("Invalid date. Please provide a real date of birth...")
+      errorHandler("Invalid date. Please provide a real date of birth...")
       return;
     }
     // Validates the username
     let re = /^[a-z]([a-z,0-9]?){4,15}$/
     username = username.toLowerCase();
     if (!re.test(username)) {
-      alert("Invalid username format. Username must start with a letter, only contain letters and numbers, and be between 5 and 16 characters long.")
+      errorHandler("Invalid username format. Username must start with a letter, only contain letters and numbers, and be between 5 and 16 characters long.")
       return;
     }
     // Verify user's first and last name
     if (!fName || !lName) {
-      alert("Please provide a valid name!")
+      errorHandler("Please provide a valid name!");
       return;
     }
-
-    console.log(cookies.token, username);
 
     fetch("http://localhost:8888/.netlify/functions/api/account/setup/user",
     {
@@ -197,6 +205,7 @@ const AccountSetup = () => {
       }
     })
     .catch(function(error) {
+      errorHandler(error);
       console.log(error);
     })
   }
@@ -232,6 +241,7 @@ const AccountSetup = () => {
       {/* If we are on a step that exists outside the options range, assume we are all set, and say that*/}
         <h1> {current > options.length ? "All Set!" : options[current-1].full_name} </h1>
         <ProgressBar options={options} current={current} />
+        <p id="error">Error messages go here!</p>
         <div className="profile-fields">
           {sections[current-1]}
         </div>

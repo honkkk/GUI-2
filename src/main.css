@@ -792,3 +792,7 @@ button.setup-next {
   top: 12px;
   right: 12px;
 }
+
+#error {
+  display: none;
+}

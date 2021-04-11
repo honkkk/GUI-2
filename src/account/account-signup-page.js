@@ -9,6 +9,13 @@ const SignPage = () => {
 
   const toggleSignupController = () => {
     setToggleSignup(!toggleSignup);
+    document.getElementById('error').style.display = 'none';
+  }
+
+  const errorHandler = (error_message) => {
+    const error = document.getElementById('error');
+    error.style.display = 'block';
+    error.innerHTML = error_message;
   }
 
   const validateEmail = (email) => {
@@ -26,17 +33,16 @@ const SignPage = () => {
     let password = document.getElementById("password").value;
     let email_conf = document.getElementById("email_conf").value;
     let password_conf = document.getElementById("password_conf").value;
-    console.log(email, password, password_conf, email_conf);
     if (!validateEmail(email)) {
-      alert("Enter a valid email!")
+      errorHandler("Enter a valid email!")
       return
     }
     if (email !== email_conf || password !== password_conf) {
-      alert("Make sure your email matches and the password matches.")
+      errorHandler("Make sure your email matches and the password matches.")
       return
     }
     if (!validatePassword(password)) {
-      alert("Password does not meet requirements. Must contain an uppercase and lowercase letter, a number, and be 8 to 32 characters long.")
+      errorHandler("Password does not meet requirements. Must contain an uppercase and lowercase letter, a number, and be 8 to 32 characters long.")
       return
     }
 
@@ -69,6 +75,7 @@ const SignPage = () => {
       }
     })
     .catch(function(error) {
+      errorHandler(error);
       console.log(error);
     })
   }
@@ -77,7 +84,7 @@ const SignPage = () => {
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
     if (!validateEmail(email)) {
-      alert("Enter a valid email!")
+      errorHandler("Enter a valid email!")
       return
     }
 
@@ -107,6 +114,7 @@ const SignPage = () => {
       }
     })
     .catch(function(error) {
+      errorHandler(error)
       console.log(error);
     })
   }
@@ -115,6 +123,7 @@ const SignPage = () => {
     <div className="sign-page">
       <div className="signup-content">
         <h1> Game1Up </h1>
+        <p id="error">Error message here!</p>
         { !toggleSignup && (
           <>
             <label>
