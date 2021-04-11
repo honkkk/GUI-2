@@ -18,7 +18,7 @@ const EventCard = ({location, name, date, status, id}) => {
   return (
     <>
       {togglePopup && <EventPopup togglePopupController={togglePopupController} status={status} name={name} id={id}/>}
-      <div className={"event event-card " + (status == "joined" ? "event-joined " : "") + (status == "pending" ? "event-pending " : "")} onClick={togglePopupController}>
+      <div className={"event event-card " + (status === "joined" ? "event-joined " : "") + (status === "pending" ? "event-pending " : "")} onClick={togglePopupController}>
         <h3>{name}</h3>
         <div className= "event-card-details">
           {game(22, 22)}

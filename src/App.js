@@ -5,8 +5,7 @@ import TestPage from "./test.js"
 import CreatePage from "./create/create-page.js"
 import SignPage from "./account/account-signup-page.js"
 import AccountSetup from "./account/account-setup-page.js"
-import { CookiesProvider } from 'react-cookie';
-import { useCookies } from 'react-cookie';
+import { useCookies, CookiesProvider } from 'react-cookie';
 import {
   BrowserRouter as Router,
   Switch,
@@ -97,14 +96,15 @@ var user_joined_events = [
 const addGame = (games) => {
   alert('A name was submitted: ' + games.join(', '));
 }
+
 // Our main app component
 const App = () => {
 
   const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (!cookies.token) {
-      if (window.location.pathname != "/") {
+      if (window.location.pathname !== "/") {
         console.log(window.location.pathname);
         window.location.pathname = "/"
       }
@@ -124,12 +124,12 @@ const App = () => {
       return response.json()
     })
     .then(function(response) {
-      if (response.status == null) {
+      if (response.status === null) {
         throw Error(response.statusText)
       }
-      if (response.status == "error")
+      if (response.status === "error")
         throw Error(response.server_message + ", " + response.error_message)
-      if (response.status == "success") {
+      if (response.status === "success") {
         if (!response.message) {
           console.log(response.message);
           removeCookie("token");
@@ -142,7 +142,13 @@ const App = () => {
       window.location.href = './'
       console.log(error);
     })
-  })
+  })*/
+
+  if (!cookies.token) {
+    return (<div className="App">
+      <SignPage/>
+    </div>);
+  }
 
   return (
     <Router>

@@ -1,20 +1,17 @@
 import React from "react"
-import {Link, useHistory} from "react-router-dom";
 import {useState} from 'react';
-import {user, arrow_right, plus, del} from "../shared/icons.js"
+import {user} from "../shared/icons.js"
 import ProgressBar from "../shared/status-bar.js"
-import CategoryCard from "../shared/category-card.js"
 import ProfileSetup from "./profile-setup.js"
 import GameTypes from "./game-types.js"
 import OwnedGames from "./owned-games.js"
 import Location from "./location.js"
+import { useCookies } from 'react-cookie';
 
 const AccountSetup = () => {
 
-  // Ability for a button to change users path
-  const history = useHistory();
   // Current page to display
-  const [current, setCurrent] = useState(1);
+  const [current, setCurrent] = useState(2);
   // List of selected games and locations
   const [gameList, setGameList] = useState([]);
   const [locationList, setLocationList] = useState([]);
@@ -22,21 +19,25 @@ const AccountSetup = () => {
   const [categories, setCategories] = useState([
     {
       name:"Board Games",
+      id:"board",
       img:"/board.jpg",
       selected: false
     },
     {
       name:"Video Games",
+      id:"video",
       img:"/video.jpg",
       selected: false
     },
     {
       name:"Card Games",
+      id:"card",
       img:"/card.jpg",
       selected: false
     },
     {
       name:"Role Playing",
+      id:"rp",
       img:"/rp.jpg",
       selected: false
     },
@@ -50,6 +51,10 @@ const AccountSetup = () => {
     month: '',
     year: ''
   });
+  // Stop user from changing user data once set in DB
+  const [userDataSet, setUserDataSet] = useState(false);
+  // Accessing session token
+  const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
 
   const userDataHandler = (e) => {
     setUserData ({...userData, [e.target.id]:e.target.value})
@@ -62,18 +67,18 @@ const AccountSetup = () => {
     e.value = ""
   }
   const removeGame = (e) => {
-    setGameList(gameList.filter( (item, index) => index !=e.target.parentElement.dataset.index));
+    setGameList(gameList.filter( (item, index) => index !==e.target.parentElement.dataset.index));
   }
 
   // Handles a user adding or removing a location from the list
   const addLocation = () => {
     let e_city = document.getElementById('city-profile-setup');
     let e_state = document.getElementById('state-profile-setup');
-    setLocationList([...locationList, e_city.value + ", " + e_state.value]);
+    setLocationList([...locationList, {city:e_city.value, state:e_state.value}]);
     e_city.value = "";
   }
   const removeLocation = (e) => {
-    setLocationList(locationList.filter( (item, index) => index !=e.target.parentElement.dataset.index));
+    setLocationList(locationList.filter( (item, index) => index !==e.target.parentElement.dataset.index));
   }
 
   // Handles changes of what catigories are selcted
@@ -82,6 +87,118 @@ const AccountSetup = () => {
     let category = categories[id];
     category.selected = !category.selected;
     setCategories([...categories.slice(0, id), category, ...categories.slice(id+1)])
+  }
+
+  const onPrefSubmit = () => {
+
+    const reduced_categories = categories.map( item =>  {
+        return {id: item.id, selected: item.selected}
+      })
+
+    fetch("http://localhost:8888/.netlify/functions/api/account/setup/preferences",
+    {
+      method:'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        locations:locationList,
+        games:gameList,
+        categories: reduced_categories,
+        session: cookies.token
+      })
+    })
+    .then(function(response) {
+      return response.json()
+    })
+    .then(function(response) {
+      if (response.status === null) {
+        throw Error(response.statusText)
+      }
+      if (response.status === "error")
+        throw Error(response.server_message + ", " + response.error_message)
+      if (response.status === "success") {
+        console.log(response.token);
+        setCookies("token", response.token);
+        window.location.href = './feed'
+      }
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
+    //document.location.href = "./feed";
+  }
+
+  const onProfileSubmit = () => {
+
+    if (userDataSet) {
+      setCurrent(current+1);
+      return;
+    }
+
+    let {username, fName, lName, month, day, year} = userData;
+    // Validate date of birth submitted (constrains ensure no overflow when creating the date)
+    const date = new Date(year, month, day);
+    if (date.getDate() != day || date.getFullYear() != year ||
+        date.getMonth() != month || year > 2100 || month > 11 ||
+        day > 31 || year < 1900 || month < 0 || day < 0) {
+      alert("Incorrect or missing date, try again.")
+      return;
+    }
+    // Validates DOB is in the past
+    if (date.getTime() >= Date.now()) {
+      alert("Invalid date. Please provide a real date of birth...")
+      return;
+    }
+    // Validates the username
+    let re = /^[a-z]([a-z,0-9]?){4,15}$/
+    username = username.toLowerCase();
+    if (!re.test(username)) {
+      alert("Invalid username format. Username must start with a letter, only contain letters and numbers, and be between 5 and 16 characters long.")
+      return;
+    }
+    // Verify user's first and last name
+    if (!fName || !lName) {
+      alert("Please provide a valid name!")
+      return;
+    }
+
+    console.log(cookies.token, username);
+
+    fetch("http://localhost:8888/.netlify/functions/api/account/setup/user",
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify( {
+        username,
+        fName,
+        lName,
+        birth_year:year,
+        birth_month:month,
+        birth_day:day,
+        session: cookies.token
+      })
+    })
+    .then(function(response) {
+      return response.json()
+    })
+    .then(function(response) {
+      if (response.status === null) {
+        throw Error(response.statusText)
+      }
+      if (response.status === "error")
+        throw Error(response.server_message + ", " + response.error_message)
+      if (response.status === "success") {
+        console.log(response.message);
+        setUserDataSet(true);
+        setCurrent(current+1);
+      }
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
   }
 
   // List of pages to show for setup
@@ -94,7 +211,7 @@ const AccountSetup = () => {
 
   // All the sections that will be rendered to the user. Display order depends on the value of current
   const sections = [
-    <ProfileSetup nextHandler={() => setCurrent(current+1)} changeHandler={userDataHandler} userData={userData}/>,
+    <ProfileSetup nextHandler={onProfileSubmit} changeHandler={userDataHandler} userData={userData} locked={userDataSet}/>,
     <GameTypes nextHandler={() => setCurrent(current+1)} backHandler={() => setCurrent(current-1)} categories={categories} categorySelectHandler={category_select_handler}/>,
     <OwnedGames nextHandler={() => setCurrent(current+1)} backHandler={() => setCurrent(current-1)} addGameHandler={addGame} removeGameHandler={removeGame} gameList={gameList}/>,
     <Location nextHandler={() => setCurrent(current+1)} backHandler={() => setCurrent(current-1)} addLocationHandler={addLocation} removeLocationHandler={removeLocation} locationList={locationList}/>,
@@ -105,7 +222,7 @@ const AccountSetup = () => {
       </div>
       <p style={{'textAlign':'center'}}>{userData.username}</p>
       <button className="setup-next" onClick={() => setCurrent(current-1)}>Back</button>
-      <button className="setup-next" onClick={() => history.push('/feed')}>Finish</button>
+      <button className="setup-next" onClick={onPrefSubmit}>Finish</button>
     </>),
   ]
 

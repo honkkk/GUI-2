@@ -47,7 +47,7 @@ const ProfilePage = ({user_data ,user_games, upcoming, addGame}) => {
         {(!showFilterList) && <EventCardCollection events={upcoming} size={3} />}
       </section>
       <section>
-        {(showFilterList) && <EventCardCollection events={upcoming.filter((upcoming) => upcoming.host === user_data.username)} size={3} />}
+        {(showFilterList) && <EventCardCollection events={upcoming.filter((upcoming) => upcoming.host=user_data.username)} size={3} />}
       </section>
       {showGamesPopup && <GamesPopup user_games = {user_games} closePopup = {toggleGamesPopup} addGames={toggleAddGamesPopup}/>}
       {showAddGamesPopup && <AddGamesPopup addGame = {addGame} closePopup ={closeAddGamesPopup}/>}

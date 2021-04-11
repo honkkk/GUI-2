@@ -6,7 +6,7 @@ const AddGamesPopup = ({closePopup, addGame}) => {
   const [games, setGames] = useState([]);
 
   const removeClick = (e) => {
-    setGames(games.filter( (item, index) => index !=e.target.parentElement.dataset.index));
+    setGames(games.filter( (item, index) => index !==e.target.parentElement.dataset.index));
   }
 
   var createInputs = games.map(( el,i) => (

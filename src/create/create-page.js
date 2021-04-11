@@ -20,7 +20,7 @@ const CreatePage = () => {
   const [state, setState] = useState("AL")
   const [games, setGames] = useState([]);
   const removeClick = (e) => {
-    setGames(games.filter( (item, index) => index !=e.target.parentElement.dataset.index));
+    setGames(games.filter( (item, index) => index !==e.target.parentElement.dataset.index));
     e.preventDefault();
   }
   var createInputs = games.map(( el,i) => (

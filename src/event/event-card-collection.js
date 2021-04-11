@@ -27,7 +27,7 @@ const EventCardCollection = ({events, size}) => {
   return (
     <div className="scroll-event-cards">
       {/*Only show this button if there are cards to show to the left*/}
-      {upcomingIndex != 0 && <button className="button-no-style" onClick={left_arrow_handler}>{left_arrow()}</button>}
+      {upcomingIndex !== 0 && <button className="button-no-style" onClick={left_arrow_handler}>{left_arrow()}</button>}
       {rendered_upcoming_events}
       {/*Only show this button if there are cards to show to the right*/}
       {upcomingIndex < events.length-size && <button className="button-no-style" onClick={right_arrow_handler}>{right_arrow()}</button>}

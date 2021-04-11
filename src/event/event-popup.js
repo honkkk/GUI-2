@@ -56,8 +56,8 @@ const EventPopup = ({togglePopupController, status, name, id}) => {
         </div>
         <div className="expanded-bottom-buttons">
           <button><p>...</p></button>
-          {status=='joined' && <button><p>Leave</p></button>}
-          {status=='pending' && <button><p>Cancel</p></button>}
+          {status==='joined' && <button><p>Leave</p></button>}
+          {status==='pending' && <button><p>Cancel</p></button>}
           {!status && <button><p>Join</p></button>}
         </div>
       </div>

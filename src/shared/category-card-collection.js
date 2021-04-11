@@ -1,5 +1,4 @@
 import React from "react"
-import {game, dice, clock} from "./icons.js"
 import {useState} from 'react';
 import CategoryCard from "../shared/category-card.js"
 

@@ -26,7 +26,7 @@ setupRouter.get("/", (req, res) => {
 setupRouter.use("/", async (req, res, next) => {
   req.body.user = null;
   const {session} = req.body;
-  if (session == null) {
+  if (session === null) {
     res.status(401).send({status: 'error', server_message: "Not authorized to view this page!", error_message: "020"})
     return;
   }
@@ -59,16 +59,18 @@ setupRouter.use("/", async (req, res, next) => {
 //  - user : string (or ref?)
 //  - username : string
 //  - birth : date
+//  - fName : string
+//  - lName : string
 // Returns:
 //  - success / failure
 // Actions:
 //  - updates user info
 //  - sets user status to "preferences"
 setupRouter.post("/user", async (req, res) => {
-  let {user, username, birth_year, birth_month, birth_day} = req.body;
+  let {user, username, birth_year, birth_month, birth_day, fName, lName} = req.body;
 
   // Validate existence of user and username
-  if (user == null || username == null) {
+  if (user === null || username === null || lName === null || fName === null) {
     res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
     return;
   }
@@ -112,7 +114,7 @@ setupRouter.post("/user", async (req, res) => {
     return;
   }
 
-  // Updates the iser in the DB
+  // Updates the user in the DB
   try {
     await adminClient.query(
       q.Update (
@@ -121,6 +123,8 @@ setupRouter.post("/user", async (req, res) => {
           data: {
             status: "preferences",
             username,
+            fName,
+            lName,
             birth:date.toISOString()
           }
         }
@@ -147,7 +151,8 @@ setupRouter.post("/user", async (req, res) => {
 //  - sets user status to "complete"
 setupRouter.post("/preferences", async (req, res) => {
   let {user, locations, categories, games} = req.body;
-  if (user == null || locations == null || categories == null || games == null) {
+  console.log(user, locations, categories, games);
+  if (user == null || locations == null || categories == null || games === null) {
     res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
     return;
   }
@@ -168,23 +173,14 @@ setupRouter.post("/preferences", async (req, res) => {
     return;
   }
 
-  // Parse the json data
   try {
-    locations = JSON.parse(locations)
-    categories = JSON.parse(categories)
-    games = JSON.parse(games)
-  } catch(error) {
-    res.status(500).send({status: 'error', server_message: "an internal error occured", error_message: error.message})
-    return;
-  }
 
-  // Makes sure location is uniform
-  locations.forEach(item => {
-    item.town = item.town.toLowerCase();
-    item.state = item.state.toLowerCase();
-  });
+    // Makes sure location is uniform
+    locations.forEach(item => {
+      item.city = item.city.toLowerCase();
+      item.state = item.state.toLowerCase();
+    });
 
-  try {
     const response = await adminClient.query(
       q.Do(
         q.Create(

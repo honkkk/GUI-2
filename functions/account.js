@@ -23,7 +23,7 @@ accountRouter.get("/", (req, res) => {
 //  - Creates a session in DB
 accountRouter.post("/login", async (req, res) => {
   const {email, password} = req.body;
-  if (email == null || password == null) {
+  if (email === null || password === null) {
     res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
     return;
   }
@@ -53,7 +53,7 @@ accountRouter.post("/login", async (req, res) => {
   }
 
   // check hashed password against what we have
-  if (user.data.hashed_password != getHashedPassword(password, user.data.salt)) {
+  if (user.data.hashed_password !== getHashedPassword(password, user.data.salt)) {
     res.status(401).send({status: 'error', server_message: "Incorrect email/password", error_message: "010"})
     return;
   }
@@ -95,11 +95,11 @@ accountRouter.post("/login", async (req, res) => {
 accountRouter.post("/create", async (req, res) => {
   var {email, conf_email, password, conf_password} = req.body;
   // Input cleaning
-  if (email == null || password == null) {
+  if (email === null || password === null) {
     res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
     return;
   }
-  if (email.toLowerCase() != conf_email.toLowerCase() || password != conf_password) {
+  if (email.toLowerCase() !== conf_email.toLowerCase() || password !== conf_password) {
     res.status(400).send({status: 'error', server_message: "Email or password missmatch", error_message: "001"})
     return;
   }
@@ -132,7 +132,7 @@ accountRouter.post("/create", async (req, res) => {
       )
     )
   } catch (error) {
-    if (error.message == "instance not unique") {
+    if (error.message === "instance not unique") {
       res.status(400).send({status: 'error', server_message: "Email already registered!", error_message: error.message})
       return;
     }
@@ -170,7 +170,7 @@ accountRouter.post("/create", async (req, res) => {
 accountRouter.post("/status", async (req, res) => {
   var {session} = req.body;
   // Input cleaning
-  if (session == null) {
+  if (session === null) {
     res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
     return;
   }
@@ -185,7 +185,7 @@ accountRouter.post("/status", async (req, res) => {
     )
     res.send({status:"success", message:true})
   } catch (error) {
-    if (error.message == "instance not found") {
+    if (error.message === "instance not found") {
       res.send({status:"success", message:false})
       return;
     }

@@ -23,7 +23,7 @@ const EventBar = ({location, name, date, status, id}) => {
   let ret = (
     <>
       {togglePopup && <EventPopup togglePopupController={togglePopupController} status={status} name={name} id={id}/>}
-      <div className={"event event-bar " + (status == "joined" ? "event-joined " : "") + (status == "pending" ? "event-pending " : "")}>
+      <div className={"event event-bar " + (status === "joined" ? "event-joined " : "") + (status === "pending" ? "event-pending " : "")}>
         <button className="event-bar-expand" onClick={togglePopupController}> <p>Details</p></button>
         <div className="event-user-status user-icon-list">
           <UserList users={users} maxShown={2}/>

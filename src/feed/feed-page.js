@@ -65,8 +65,8 @@ const FeedPage = ({user, upcoming}) => {
 
   // Handles changes of what catigories are selcted
   const category_select_handler = (id) => {
-    let result = categories.filter( (item) => item != id );
-    if (result.length == categories.length)
+    let result = categories.filter( (item) => item !== id );
+    if (result.length === categories.length)
       result.push(id)
     setCategories(result);
     console.log(result);

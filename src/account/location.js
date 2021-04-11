@@ -1,12 +1,6 @@
 import React from "react"
-import {Link, useHistory} from "react-router-dom";
 import {useState} from 'react';
-import {user, arrow_right, plus, del} from "../shared/icons.js"
-import ProgressBar from "../shared/status-bar.js"
-import CategoryCard from "../shared/category-card.js"
-import ProfileSetup from "./profile-setup.js"
-import GameTypes from "./game-types.js"
-import OwnedGames from "./owned-games.js"
+import {del} from "../shared/icons.js"
 
 const Location = ({nextHandler, locationList, addLocationHandler, removeLocationHandler, backHandler}) => {
 
@@ -15,7 +9,7 @@ const Location = ({nextHandler, locationList, addLocationHandler, removeLocation
     locationListRendered.push(
       (
         <div key={i} data-index={i} className="game-title-list-card">
-          <p>{locationList[i]}</p>
+          <p>{locationList[i].city}, {locationList[i].state}</p>
           <button className="button-no-style" onClick={removeLocationHandler}>{del(15, 15)}</button>
         </div>)
     );

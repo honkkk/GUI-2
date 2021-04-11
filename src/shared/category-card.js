@@ -1,5 +1,4 @@
 import React from "react"
-import {game, dice, clock} from "./icons.js"
 
 const CategoryCard = ({img, name, onSelect, id, checked}) => {
   return (
