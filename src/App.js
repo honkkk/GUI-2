@@ -102,7 +102,7 @@ const App = () => {
 
   const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
 
-  /*useEffect(() => {
+  useEffect(() => {
     if (!cookies.token) {
       if (window.location.pathname !== "/") {
         console.log(window.location.pathname);
@@ -142,7 +142,7 @@ const App = () => {
       window.location.href = './'
       console.log(error);
     })
-  })*/
+  })
 
   if (!cookies.token) {
     return (<div className="App">
