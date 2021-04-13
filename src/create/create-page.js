@@ -19,10 +19,19 @@ const CreatePage = () => {
   const [period, setPeriod] = useState("AM")
   const [state, setState] = useState("AL")
   const [games, setGames] = useState([]);
+  const [errors, setErrors] = useState({
+    "title": false,
+    "capacity": false,
+    "date": false,
+    "location":false,
+    "time": false
+  })
+  //Removes the games using the dataset index.
   const removeClick = (e) => {
-    setGames(games.filter( (item, index) => index !==e.target.parentElement.dataset.index));
+    setGames(games.filter( (item, index) => index !=e.target.parentElement.dataset.index));
     e.preventDefault();
   }
+  //Creates the new games
   var createInputs = games.map(( el,i) => (
       <div key={"gameNum-" + i} className = "create-input" data-index={i}>
         <label>Game {i+2}:</label>
@@ -30,6 +39,7 @@ const CreatePage = () => {
         <button data-index={i} className = "button-no-style" onClick={removeClick}>{del(20,20)}</button>
       </div> )
   );
+  //binding the games based on thier dataset index
   function handleChange(event) {
       let newGames = [...games];
       newGames[event.target.dataset.index] = event.target.value;
@@ -37,15 +47,67 @@ const CreatePage = () => {
       //console.log(event.target.dataset.index)
       //console.log(event.target.value)
   }
+  //adds a new game to the list of games
   const addClick = (event) => {
       setGames([...games, event.target.value])
       event.preventDefault();
   }
+  //This function undos the error upon change of the input field
+  //To use variable as key, it must have []
+  function updateError(name){
+    setErrors({...errors, [name]:false});
+    console.log(errors);
+  }
+  //called before handleSubmit completes, will validate all the input fields before submission.
+  function validate(){
+    const date = new Date(yr, mm, dd);
+    var currentDate = new Date();
+    //Temp = {...errors} as it creates a new object where as temp = errors, passes by refernce which will not reRender
+    var temp_error = {...errors};
+    if(title == ''){
+      temp_error['title'] = true;
+    }
+    if(capacity == '' || capacity < 2 || !Number.isInteger(parseFloat(capacity))){
+      temp_error['capacity'] = true;
+    }
+    if(location == ''){
+      temp_error['location'] = true;
+    }
+    if (date.getDate() != dd  || date.getMonth() != mm || date.getFullYear() != yr) {
+      temp_error["date"] = true;
+    }
+    if(yr < currentDate.getFullYear()){
+      temp_error["date"] = true;
+    }
+    if(mm < (currentDate.getMonth()+1) && yr == currentDate.getFullYear()){
+      temp_error["date"] = true;
+    }
+    if(dd < currentDate.getDate() && mm == (currentDate.getMonth()+1) && yr == currentDate.getFullYear()){
+      temp_error["date"] = true;
+    }
+    if(location == ""){
+      temp_error['location'] = true;
+    }
+    if(time == ""){
+      temp_error['time'] = true;
+    }
+    console.log( date.getDate() +""+ date.getMonth() +""+ date.getFullYear())
+    console.log( currentDate.getDate() +""+ (currentDate.getMonth()+1) +""+ currentDate.getFullYear())
+    console.log(dd +""+mm+""+yr);
+    console.log(errors)
+    console.log(temp_error)
+    setErrors(temp_error)
+    return false;
+  }
+
   const handleSubmit = event => {
       let data = [];
       data[0] = document.getElementById('create-first-game').value;
       for (var i = 0; i < games.length; i++) {
         data[i+1]=games[i]
+      }
+      if(validate()){
+
       }
       console.log(data + "\ntitle:\n" + title + "\ncapcity:\n" + capacity + "\nDD:\n" + dd + "\nMM:\n" + mm + "\nYR:\n" + yr + "\nTime\n" + time + "\nlocation\n" + location + "\ndetails\n" + details)
       console.log("Rpg: " + rpg + " bg: " + bg + " cg: " + cg + " vg: " +vg + " period: " + period + " state: " + state)
@@ -62,7 +124,7 @@ const CreatePage = () => {
         <div className = "create-right">
           <div className = "create-input">
             <label>Title:</label>
-            <input type="text" placeholder="Title" value = {title} onChange={(e) => setTitle(e.target.value)}></input>
+            <input type="text" placeholder="Title" className = {errors["title"] ? "errorInput" : ""} value = {title} onChange={(e) => {setTitle(e.target.value); updateError("title");}}></input>
           </div>
           <div className = "create-input">
             <label>Game 1:</label>
@@ -87,30 +149,24 @@ const CreatePage = () => {
           </div>
           <div className = "create-input">
             <label>Capacity:</label>
-            <input type="text" placeholder="Number of max players" value = {capacity} onChange={(e) => setCapacity(e.target.value)}></input>
+            <input type="text" placeholder="Number of max players"  className = {errors["capacity"] ? "errorInput" : ""} value = {capacity} onChange={(e) =>{ setCapacity(e.target.value); updateError("capacity")}}></input>
           </div>
           <div className = "date">
             <label>DD:</label>
-            <input type="text" placeholder="DD" value = {dd} onChange={(e) => setDD(e.target.value)}></input>
+            <input type="text" placeholder="DD" className = {errors["date"] ? "errorInput" : ""} value = {dd} onChange={(e) =>{ setDD(e.target.value); updateError("date")}}></input>
             <label>MM:</label>
-            <input type="text" placeholder="MM" value = {mm} onChange={(e) => setMM(e.target.value)}></input>
+            <input type="text" placeholder="MM" className = {errors["date"] ? "errorInput" : ""} value = {mm} onChange={(e) =>{ setMM(e.target.value); updateError("date")}}></input>
             <label>YR:</label>
-            <input type="text" placeholder="YR" value = {yr} onChange={(e) => setYR(e.target.value)}></input>
+            <input type="text" placeholder="YR" className = {errors["date"] ? "errorInput" : ""} value = {yr} onChange={(e) =>{ setYR(e.target.value); updateError("date")}}></input>
           </div>
           <div className = "create-input">
             <label>Time:</label>
-            <div className = "time">
-              <input type="text" placeholder="HH:MM" value = {time} onChange={(e) => setTime(e.target.value)}></input>
-            </div>
-            <select value = {period} onChange={(e) => setPeriod(e.target.value)}>
-              <option value="AM">AM</option>
-              <option value="PM">PM</option>
-            </select>
+            <input type="time" placeholder="HH:MM" className = {errors["time"] ? "errorInput" : ""} value = {time} onChange={(e) => {setTime(e.target.value); updateError("time");}}></input>
           </div>
           <div className = "create-input">
             <label>Location:</label>
             <div className = "time">
-              <input type="text" placeholder="Location" value = {location} onChange={(e) => setLocation(e.target.value)}></input>
+              <input type="text" placeholder="Location" className = {errors["location"] ? "errorInput" : ""} value = {location} onChange={(e) => {setLocation(e.target.value); updateError("location")}}></input>
             </div>
             <select value = {state} onChange={(e) => setState(e.target.value)}>
             	<option value="AL">AL</option>

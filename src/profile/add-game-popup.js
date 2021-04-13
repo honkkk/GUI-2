@@ -6,11 +6,11 @@ const AddGamesPopup = ({closePopup, addGame}) => {
   const [games, setGames] = useState([]);
 
   const removeClick = (e) => {
-    setGames(games.filter( (item, index) => index !==e.target.parentElement.dataset.index));
+    setGames(games.filter( (item, index) => index !=e.target.parentElement.dataset.index));
   }
 
   var createInputs = games.map(( el,i) => (
-      <div key={"gaymer-" + i} className = "create-input" data-index={i}>
+      <div key={"gamer-" + i} className = "create-input" data-index={i}>
         <input type="text" data-index={i} value = {el} onChange={handleChange} />
         <button data-index={i} className = "button-no-style" onClick={removeClick}>{del(20,20)}</button>
       </div> )
