@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const accountRouter = require('./account.js')
+const eventRouter = require('./event.js')
 
 const app = express();
 const apiRouter = express.Router();
@@ -20,6 +21,8 @@ apiRouter.get("/", (req, res) => {
 })
 
 apiRouter.use("/account", accountRouter);
+
+apiRouter.use("/event", eventRouter);
 
 
 app.use("/.netlify/functions/api", apiRouter)
