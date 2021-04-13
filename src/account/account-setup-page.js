@@ -150,7 +150,7 @@ const AccountSetup = () => {
     // Validate date of birth submitted (constrains ensure no overflow when creating the date)
     const date = new Date(year, month, day);
     if (date.getDate() != day || date.getFullYear() != year ||
-        date.getMonth() != month || year > 2100 || month > 11 ||
+        date.getMonth() != month || year > 2100 || month > 12 ||
         day > 31 || year < 1900 || month < 0 || day < 0) {
       errorHandler("Incorrect or missing date, try again.")
       return;

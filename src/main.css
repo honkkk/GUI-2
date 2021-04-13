@@ -796,3 +796,9 @@ button.setup-next {
 #error {
   display: none;
 }
+
+.errorInput {
+  border-color: red;
+  color: red;
+
+}
