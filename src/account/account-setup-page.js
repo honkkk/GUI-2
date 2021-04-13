@@ -103,7 +103,7 @@ const AccountSetup = () => {
         return {id: item.id, selected: item.selected}
       })
 
-    fetch("http://localhost:8888/.netlify/functions/api/account/setup/preferences",
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account/setup/preferences",
     {
       method:'POST',
       headers:{
@@ -173,7 +173,7 @@ const AccountSetup = () => {
       return;
     }
 
-    fetch("http://localhost:8888/.netlify/functions/api/account/setup/user",
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account/setup/user",
     {
       method: 'POST',
       headers: {

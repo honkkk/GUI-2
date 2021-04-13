@@ -110,7 +110,7 @@ const App = () => {
       }
       return;
     }
-    fetch("http://localhost:8888/.netlify/functions/api/account/status",
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account/status",
     {
       method:'POST',
       headers:{

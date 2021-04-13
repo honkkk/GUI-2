@@ -46,7 +46,7 @@ const SignPage = () => {
       return
     }
 
-    fetch("http://localhost:8888/.netlify/functions/api/account/create",
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account/create",
     {
       method:'POST',
       headers:{
@@ -88,7 +88,7 @@ const SignPage = () => {
       return
     }
 
-    fetch("http://localhost:8888/.netlify/functions/api/account/login",
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account/login",
     {
       method:'POST',
       headers:{
@@ -118,6 +118,8 @@ const SignPage = () => {
       console.log(error);
     })
   }
+
+  console.log(process.env);
 
   let ret = (
     <div className="sign-page">
