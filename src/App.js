@@ -72,7 +72,7 @@ var user_joined_events = [
     short_location: '????, ?????',
     date: '????? ?????',
     status: 'pending',
-    host: 'honklover420'
+    host: 'tes'
   },
   {
     id: '76784345',
@@ -80,7 +80,7 @@ var user_joined_events = [
     short_location: '????, ?????',
     date: '????? ?????',
     status: 'joined',
-    host: 'honklover420'
+    host: 'testuser'
   }
 ]
 const addGame = (games) => {

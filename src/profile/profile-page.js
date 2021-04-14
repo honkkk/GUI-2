@@ -35,11 +35,11 @@ const ProfilePage = ({user_data ,user_games, upcoming, addGame}) => {
       </div>
       <div className = "profile-buttons">
         <button className = "button-no-style" onClick = {toggleGamesPopup}>
-          <GamesOwned owned = "7"/>
+          <GamesOwned owned = {user_games.length}/>
         </button>
         <div className="vl"></div>
         <button className = "button-no-style" onClick = {toggleFilterList}>
-        <HostedEvents hosted = "1"/>
+        <HostedEvents hosted = {upcoming.filter((upcoming) => upcoming.host == user_data.username).length}/>
         </button>
       </div>
       </div>
