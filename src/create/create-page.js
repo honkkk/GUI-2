@@ -1,9 +1,11 @@
 import React from "react"
 import {add, del} from "../shared/icons.js"
 import {useState} from 'react';
+import { useCookies } from 'react-cookie';
 
 
 const CreatePage = () => {
+  const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
   const [title, setTitle] = useState('')
   const [capacity, setCapacity] = useState('')
   const [dd, setDD] = useState('')
@@ -56,7 +58,7 @@ const CreatePage = () => {
   //To use variable as key, it must have []
   function updateError(name){
     setErrors({...errors, [name]:false});
-    console.log(errors);
+    //console.log(errors);
   }
   //called before handleSubmit completes, will validate all the input fields before submission.
   function validate(){
@@ -91,11 +93,6 @@ const CreatePage = () => {
     if(time == ""){
       temp_error['time'] = true;
     }
-    console.log( date.getDate() +""+ date.getMonth() +""+ date.getFullYear())
-    console.log( currentDate.getDate() +""+ (currentDate.getMonth()+1) +""+ currentDate.getFullYear())
-    console.log(dd +""+mm+""+yr);
-    console.log(errors)
-    console.log(temp_error)
     setErrors(temp_error)
     return false;
   }
@@ -109,8 +106,53 @@ const CreatePage = () => {
       if(validate()){
 
       }
-      console.log(data + "\ntitle:\n" + title + "\ncapcity:\n" + capacity + "\nDD:\n" + dd + "\nMM:\n" + mm + "\nYR:\n" + yr + "\nTime\n" + time + "\nlocation\n" + location + "\ndetails\n" + details)
-      console.log("Rpg: " + rpg + " bg: " + bg + " cg: " + cg + " vg: " +vg + " period: " + period + " state: " + state)
+
+      //console.log(data + "\ntitle:\n" + title + "\ncapcity:\n" + capacity + "\nDD:\n" + dd + "\nMM:\n" + mm + "\nYR:\n" + yr + "\nTime\n" + time + "\nlocation\n" + location + "\ndetails\n" + details)
+      //console.log("Rpg: " + rpg + " bg: " + bg + " cg: " + cg + " vg: " +vg + " period: " + period + " state: " + state)
+      fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/create",
+      {
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          session:cookies.token,
+          title,
+          month: mm,
+          day: dd,
+          year: yr,
+          hour: time.split(":")[0],
+          min: time.split(":")[1],
+          details,
+          city: location,
+          capacity:parseInt(capacity),
+          state,
+          state: "MA",
+          games: [],
+          catigories: {},
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      })
+      .then(function(response) {
+        if (response.status == null) {
+          throw Error(response.statusText)
+        }
+        // if we have an internal error, report it
+        if (response.status == "error")
+          throw Error(response.server_message + ", " + response.error_message)
+        // if operation succeeded
+        if (response.status == "success") {
+          console.log(response.message);
+          window.location.pathname = "/feed"
+          return;
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
+
       event.preventDefault();
   }
 

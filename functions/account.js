@@ -18,6 +18,7 @@ const q = faunadb.query;
 // Action:
 //  - Creates a session in DB
 accountRouter.post("/login", async (req, res) => {
+  console.log("AHHH");
   const {email, password} = req.body;
   if (email === null || password === null) {
     res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})

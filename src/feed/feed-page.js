@@ -2,10 +2,11 @@ import React from "react"
 import CategoryCard from "../shared/category-card.js"
 import EventCardCollection from "../event/event-card-collection.js"
 import EventBarCollection from "../event/event-bar-collection.js"
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
+import { useCookies } from 'react-cookie';
 
 // list of events for the user
-var events = [
+/*var events = [
   {
     id: '4343423',
     title: 'Game Night',
@@ -54,13 +55,60 @@ var events = [
     short_location: '????, ?????',
     date: '????? ?????',
   }
-]
+]*/
 
 const FeedPage = ({user, upcoming}) => {
 
   // States to handle selected categories and where upcoming events should show
   // NOTE: given time the slider should become its own component
   const [categories, setCategories] = useState([]);
+  const [events, setEvents] = useState(null);
+  const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
+
+  useEffect( () => {
+    if (events) return;
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/get",
+    {
+      method:'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        session:cookies.token
+      })
+    })
+    .then(function(response) {
+      return response.json()
+    })
+    .then(function(response) {
+      if (response.status === null) {
+        throw Error(response.statusText)
+      }
+      // if we have an internal error, report it
+      if (response.status === "error")
+        throw Error(response.server_message + ", " + response.error_message)
+      // if operation succeeded
+      if (response.status === "success") {
+        // We did not find the session or user, so remove the token as its fake or expired
+        let response_events = []
+        response.message.forEach((item) => {
+          response_events.push({
+            id:item.ref,
+            title:item.data.title,
+            short_location: item.data.city + ", " + item.data.state,
+            date: item.data.date
+          })
+        });
+
+        setEvents(response_events);
+
+        console.log(response.message);
+      }
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
+  })
 
 
   // Handles changes of what catigories are selcted
@@ -96,7 +144,7 @@ const FeedPage = ({user, upcoming}) => {
       {/*Needs to be auto generated....*/}
       <section>
         <h2>Events around you </h2>
-        <EventBarCollection events={events} size={5}/>
+        <EventBarCollection events={events? events : []} size={5}/>
       </section>
     </div>
   )

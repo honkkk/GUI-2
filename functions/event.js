@@ -97,7 +97,7 @@ setupRouter.post("/create", async (req, res) => {
     return;
   }
 
-  res.send(req.body);
+  res.send({status:"success", message:req.body});
 });
 
 // Deletes an event
@@ -188,6 +188,20 @@ setupRouter.post("/get/:id", async (req, res) => {
     }
     // Sends the data of the event (not ref because they have it already)
     res.send(response.data);
+  } catch (error) {
+    res.status(500).send(error.message)
+    return;
+  }
+});
+
+setupRouter.post("/get", async (req, res) => {
+  // Gets the event from the DB
+  try {
+    const response = await adminClient.query(
+      q.Call("get_events")
+    );
+    // Sents returned events
+    res.send({status:"success", message:response.data});
   } catch (error) {
     res.status(500).send(error.message)
     return;
