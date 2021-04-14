@@ -11,7 +11,7 @@ import { useCookies } from 'react-cookie';
 const AccountSetup = () => {
 
   // Current page to display
-  const [current, setCurrent] = useState(2);
+  const [current, setCurrent] = useState(1);
   // List of selected games and locations
   const [gameList, setGameList] = useState([]);
   const [locationList, setLocationList] = useState([]);
