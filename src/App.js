@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState} from "react"
 import FeedPage from "./feed/feed-page.js"
 import ProfilePage from "./profile/profile-page.js"
 import TestPage from "./test.js"
@@ -12,16 +12,6 @@ import {
   Route,
   NavLink,
 } from "react-router-dom";
-
-// This comes from the users cookies -> request to server
-var user_data = {
-  username:'andrivard4',
-  id:'13453423',
-  fName:'Andrew',
-  lName:'Rivard',
-  state: 'MA',
-  city: 'Lowell'
-};
 
 //This will have to be implemented somehow, but assuming it would be here for now
 var user_games = ["D&D", "monopoly", "exploding kittens", "Chess"]
@@ -100,17 +90,26 @@ const addGame = (games) => {
 // Our main app component
 const App = () => {
 
+  const [userData, setUserData] = useState({})
+
   const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
 
+  // Checks for a user session, validates it and grabs the user
   useEffect(() => {
+    console.log("useEffect called.");
+    // If there is no session on the client side have them log in
     if (!cookies.token) {
       if (window.location.pathname !== "/") {
-        console.log(window.location.pathname);
+        setUserData({})
         window.location.pathname = "/"
       }
       return;
     }
-    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account/status",
+
+    //TODO: make this better!
+    if (userData.fName) return;
+    // If we find a session, check if the server has it and grab the user
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account",
     {
       method:'POST',
       headers:{
@@ -127,13 +126,28 @@ const App = () => {
       if (response.status === null) {
         throw Error(response.statusText)
       }
+      // if we have an internal error, report it
       if (response.status === "error")
         throw Error(response.server_message + ", " + response.error_message)
+      // if operation succeeded
       if (response.status === "success") {
+        // We did not find the session or user, so remove the token as its fake or expired
         if (!response.message) {
           console.log(response.message);
           removeCookie("token");
           window.location.href = './'
+        } else {
+          // we found the user, so set the user's info
+          console.log(response.message);
+          setUserData({
+            ...userData,
+            fName:response.message.fName,
+            lName:response.message.lName,
+            username:response.message.username,
+            email:response.message.email,
+            birth: new Date(response.message.birth),
+            status: response.message.status
+          })
         }
       }
     })
@@ -180,10 +194,10 @@ const App = () => {
                     <TestPage />
                   </Route>
                   <Route path="/feed">
-                    <FeedPage user={user_data} upcoming={user_joined_events}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
+                    <FeedPage user={userData} upcoming={user_joined_events}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
                   </Route>
                   <Route path="/profile">
-                    <ProfilePage user_data = {user_data} user_games ={user_games} upcoming={user_joined_events} addGame = {addGame}/>
+                    <ProfilePage user_data={userData} user_games ={user_games} upcoming={user_joined_events} addGame = {addGame}/>
                   </Route>
                   <Route path="/create">
                     <CreatePage/>

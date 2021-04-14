@@ -1,6 +1,5 @@
 const express = require('express');
 const faunadb = require('faunadb');
-const verifySession = require('./verify_session.js');
 
 const setupRouter = express();
 const adminClient = new faunadb.Client({secret:"fnAEGDCqcLACAApJFk5QaTFV_saJhibLSf6nyHYY"});
@@ -10,10 +9,6 @@ const q = faunadb.query;
 setupRouter.get("/", (req, res) => {
 
 });
-
-
-// Extract the session and inject with user info
-setupRouter.use("/", verifySession)
 
 // Sets user info on account creation
 // Expects:

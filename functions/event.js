@@ -288,20 +288,24 @@ setupRouter.post("/accept/:id", async (req, res) => {
     }
 
     if (req.body.status == "accept") {
-      await adminClient.query(
-        q.Do(
-          q.Let(
-            {
-              ref: q.Ref(q.Collection("event"), request.data.event),
-              doc: q.Get(q.Var("ref")),
-              array: q.Select(["data", "users"], q.Var("doc"))
-            },
-            q.Update(q.Var("ref"), { data: { users: q.Append(request.data.sender, q.Var("array")) } })
-          ),
-          q.Delete(request.ref)
+      let update_response = await adminClient.query(
+        q.Let(
+          {
+            ref: q.Ref(q.Collection("event"), request.data.event),
+            doc: q.Get(q.Var("ref")),
+            array: q.Select(["data", "users"], q.Var("doc"))
+          },
+          q.If(
+            q.LT(q.Count(q.Var("array")), q.Select(['data', 'capacity'], q.Var("doc"))),
+            q.Do(
+              q.Update(q.Var("ref"), { data: { users: q.Append(request.data.sender, q.Var("array")) } }),
+              q.Delete(request.ref)
+            ),
+            false
+          )
         )
       )
-      res.send("accepted");
+      res.send(update_response);
       return;
     }
 

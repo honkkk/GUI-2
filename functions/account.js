@@ -2,15 +2,11 @@ const express = require('express');
 const setupRouter = require('./setup.js')
 const faunadb = require('faunadb');
 const crypto = require('crypto');
+const verifySession = require('./verify_session.js');
 
 const accountRouter = express();
 const adminClient = new faunadb.Client({secret:"fnAEGDCqcLACAApJFk5QaTFV_saJhibLSf6nyHYY"});
 const q = faunadb.query;
-
-// Default action on get
-accountRouter.get("/", (req, res) => {
-  res.send("Get on /account")
-});
 
 // User login
 // Expects:
@@ -189,6 +185,26 @@ accountRouter.post("/status", async (req, res) => {
       res.send({status:"success", message:false})
       return;
     }
+    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
+    return;
+  }
+});
+
+// Extract the session and inject with user info
+accountRouter.use("/", verifySession);
+
+accountRouter.post("/", async (req, res) => {
+  try {
+    let response = await adminClient.query(
+      q.If(
+        q.Exists(q.Ref(q.Collection('user'),req.body.user)),
+        q.Select('data',q.Get(q.Match(q.Index('get_user_info'), req.body.user))),
+        false
+      )
+    )
+    res.send({status:'success', message:response});
+    return;
+  } catch (error) {
     res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
     return;
   }
