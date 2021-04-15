@@ -94,19 +94,44 @@ const CreatePage = () => {
       temp_error['time'] = true;
     }
     setErrors(temp_error)
-    return false;
+    return true;
+  }
+  // Show backend errors
+  const errorHandler = (error_message) => {
+    const error = document.getElementById('error');
+    error.style.display = 'block';
+    error.innerHTML = error_message;
   }
 
   const handleSubmit = event => {
+      event.preventDefault();
       let data = [];
       data[0] = document.getElementById('create-first-game').value;
       for (var i = 0; i < games.length; i++) {
         data[i+1]=games[i]
       }
-      if(validate()){
+      console.log(validate());
+      if(!validate())
+        return;
 
+      let catigories = [
+      {
+        "id": "board",
+        "selected": bg
+      },
+      {
+        "id": "video",
+        "selected": vg
+      },
+      {
+        "id": "card",
+        "selected": cg
+      },
+      {
+        "id": "rp",
+        "selected": rpg
       }
-
+    ]
       //console.log(data + "\ntitle:\n" + title + "\ncapcity:\n" + capacity + "\nDD:\n" + dd + "\nMM:\n" + mm + "\nYR:\n" + yr + "\nTime\n" + time + "\nlocation\n" + location + "\ndetails\n" + details)
       //console.log("Rpg: " + rpg + " bg: " + bg + " cg: " + cg + " vg: " +vg + " period: " + period + " state: " + state)
       fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/create",
@@ -123,13 +148,13 @@ const CreatePage = () => {
           year: yr,
           hour: time.split(":")[0],
           min: time.split(":")[1],
-          details,
+          details: details? details : "",
+          catigories: catigories,
           city: location,
           capacity:parseInt(capacity),
           state,
-          state: "MA",
-          games: [],
-          catigories: {},
+          state: state,
+          games: data,
         })
       })
       .then(function(response) {
@@ -144,16 +169,13 @@ const CreatePage = () => {
           throw Error(response.server_message + ", " + response.error_message)
         // if operation succeeded
         if (response.status == "success") {
-          console.log(response.message);
           window.location.pathname = "/feed"
           return;
         }
       })
       .catch(function(error) {
-        console.log(error);
+        errorHandler(error);
       })
-
-      event.preventDefault();
   }
 
   let ret = (
@@ -161,6 +183,7 @@ const CreatePage = () => {
       <div className = "create-page">
         <div className = "create-left">
           <h1> Host Event </h1>
+          <p id="error">Error messages go here!</p>
           <button id="createButton" onClick = {handleSubmit}>Create</button>
         </div>
         <div className = "create-right">

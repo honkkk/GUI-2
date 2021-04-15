@@ -29,9 +29,10 @@ setupRouter.use("/", verifySession)
 //  - adds event to database
 //  - returns id of game
 setupRouter.post("/create", async (req, res) => {
-  const {title, month, day, year, min, hour, details, city, state, games, capacity} = req.body;
-  if (!title || !details || !city || !state || !games || !capacity) {
-    // data missing
+  const {title, month, day, year, min, hour, details, city, state, games, capacity, catigories} = req.body;
+  if (!title || !details || !city || !state || !games || !capacity || !catigories) {
+    res.status(400).send({status: 'error', server_message: "Missing data, please try again.", error_message: "???"})
+    return;
   }
   // title shouldn't be too long...
   if (title.length > 30) {
@@ -86,6 +87,7 @@ setupRouter.post("/create", async (req, res) => {
             state,
             games,
             capacity,
+            catigories,
             date: date.toISOString(),
             host: req.body.user
           }
