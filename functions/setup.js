@@ -108,7 +108,6 @@ setupRouter.post("/user", async (req, res) => {
 //  - sets user status to "complete"
 setupRouter.post("/preferences", async (req, res) => {
   let {user, locations, categories, games} = req.body;
-  console.log(user, locations, categories, games);
   if (user == null || locations == null || categories == null || games === null) {
     res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
     return;

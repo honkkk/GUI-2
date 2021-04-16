@@ -8,10 +8,12 @@ import GamesPopup from "./games-popup.js"
 import AddGamesPopup from "./add-game-popup.js"
 import {useState} from 'react';
 
-const ProfilePage = ({user_data ,user_games, upcoming, addGame}) => {
+const ProfilePage = ({user_data, upcoming, addGame}) => {
   const [showGamesPopup, setShowGamesPopup] = useState(false)
   const [showAddGamesPopup, setShowAddGamesPopup] = useState(false)
   const [showFilterList, setShowFilterList] = useState(false)
+
+  if (Object.keys(user_data).length == 0) return <p>Loading...</p>
 
   const toggleGamesPopup  = () =>{
     setShowGamesPopup(!showGamesPopup)
@@ -26,6 +28,7 @@ const ProfilePage = ({user_data ,user_games, upcoming, addGame}) => {
   const toggleFilterList = () =>{
     setShowFilterList(!showFilterList)
   }
+  console.log(user_data);
   let ret = (
     <div className = "profile-background">
       <div className = "profile-page">
@@ -35,11 +38,11 @@ const ProfilePage = ({user_data ,user_games, upcoming, addGame}) => {
       </div>
       <div className = "profile-buttons">
         <button className = "button-no-style" onClick = {toggleGamesPopup}>
-          <GamesOwned owned = {user_games.length}/>
+          {user_data.games && <GamesOwned owned = {user_data.games.length}/>}
         </button>
         <div className="vl"></div>
         <button className = "button-no-style" onClick = {toggleFilterList}>
-        <HostedEvents hosted = {upcoming.filter((upcoming) => upcoming.host == user_data.username).length}/>
+          {user_data.games && <HostedEvents hosted = {upcoming.filter((upcoming) => upcoming.host == user_data.id).length}/>}
         </button>
       </div>
       </div>
@@ -47,9 +50,9 @@ const ProfilePage = ({user_data ,user_games, upcoming, addGame}) => {
         {(!showFilterList) && <EventCardCollection events={upcoming} size={3} />}
       </section>
       <section>
-        {(showFilterList) && <EventCardCollection events={upcoming.filter((upcoming) => upcoming.host == user_data.username)} size={3} />}
+        {(showFilterList) && <EventCardCollection events={upcoming.filter((upcoming) => upcoming.host == user_data.id)} size={3} />}
       </section>
-      {showGamesPopup && <GamesPopup user_games = {user_games} closePopup = {toggleGamesPopup} addGames={toggleAddGamesPopup}/>}
+      {showGamesPopup && <GamesPopup user_games = {user_data.games} closePopup = {toggleGamesPopup} addGames={toggleAddGamesPopup}/>}
       {showAddGamesPopup && <AddGamesPopup addGame = {addGame} closePopup ={closeAddGamesPopup}/>}
     </div>
   )

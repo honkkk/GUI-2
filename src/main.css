@@ -795,10 +795,12 @@ button.setup-next {
 
 #error {
   display: none;
+  color:rgba(200, 0, 0, 0.9);
+  font-weight: 700;
+  text-align: center;
 }
 
 .errorInput {
   border-color: red;
   color: red;
-
 }

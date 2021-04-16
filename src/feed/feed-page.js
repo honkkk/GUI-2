@@ -5,58 +5,6 @@ import EventBarCollection from "../event/event-bar-collection.js"
 import {useState, useEffect} from 'react';
 import { useCookies } from 'react-cookie';
 
-// list of events for the user
-/*var events = [
-  {
-    id: '4343423',
-    title: 'Game Night',
-    short_location: 'Lowell, MA',
-    date: 'March 27th',
-  },
-  {
-    id: '32432432',
-    title: 'Board Game Time!',
-    short_location: 'Norfolk, MA',
-    date: 'April 3rd',
-  },
-  {
-    id: '76784345',
-    title: 'I don\'t know where I am!',
-    short_location: '????, ?????',
-    date: '????? ?????',
-  },
-  {
-    id: '76784345',
-    title: 'I don\'t know where I am!',
-    short_location: '????, ?????',
-    date: '????? ?????',
-  },
-  {
-    id: '4343423',
-    title: 'Game Night',
-    short_location: 'Lowell, MA',
-    date: 'March 27th',
-  },
-  {
-    id: '32432432',
-    title: 'Board Game Time!',
-    short_location: 'Norfolk, MA',
-    date: 'April 3rd',
-  },
-  {
-    id: '76784345',
-    title: 'I don\'t know where I am!',
-    short_location: '????, ?????',
-    date: '????? ?????',
-  },
-  {
-    id: '76784345',
-    title: 'I don\'t know where I am!',
-    short_location: '????, ?????',
-    date: '????? ?????',
-  }
-]*/
-
 const FeedPage = ({user, upcoming}) => {
 
   // States to handle selected categories and where upcoming events should show
@@ -101,8 +49,6 @@ const FeedPage = ({user, upcoming}) => {
         });
 
         setEvents(response_events);
-
-        console.log(response.message);
       }
     })
     .catch(function(error) {
@@ -117,7 +63,6 @@ const FeedPage = ({user, upcoming}) => {
     if (result.length === categories.length)
       result.push(id)
     setCategories(result);
-    console.log(result);
   }
 
 

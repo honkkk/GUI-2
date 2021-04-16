@@ -20,8 +20,6 @@ const AddGamesPopup = ({closePopup, addGame}) => {
       let newGames = [...games];
       newGames[event.target.dataset.index] = event.target.value;
       setGames(newGames);
-      console.log(event.target.dataset.index)
-      console.log(event.target.value)
   }
 
   const addClick = (event) => {

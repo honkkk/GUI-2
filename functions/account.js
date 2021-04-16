@@ -18,7 +18,6 @@ const q = faunadb.query;
 // Action:
 //  - Creates a session in DB
 accountRouter.post("/login", async (req, res) => {
-  console.log("AHHH");
   const {email, password} = req.body;
   if (email === null || password === null) {
     res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
@@ -194,12 +193,13 @@ accountRouter.post("/status", async (req, res) => {
 // Extract the session and inject with user info
 accountRouter.use("/", verifySession);
 
+// Get the user from  a session
 accountRouter.post("/", async (req, res) => {
   try {
     let response = await adminClient.query(
       q.If(
         q.Exists(q.Ref(q.Collection('user'),req.body.user)),
-        q.Select('data',q.Get(q.Match(q.Index('get_user_info'), req.body.user))),
+        q.Get(q.Match(q.Index('get_user_info'), req.body.user)),
         false
       )
     )
@@ -210,6 +210,45 @@ accountRouter.post("/", async (req, res) => {
     return;
   }
 });
+
+// Get the user from  a session
+accountRouter.post("/pref", async (req, res) => {
+  try {
+    let response = await adminClient.query(
+      q.Select('data',q.Get(q.Match(q.Index('create_pref'), req.body.user)))
+    )
+    res.send({status:'success', message:response});
+    return;
+  } catch (error) {
+    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
+    return;
+  }
+});
+
+accountRouter.post("/events", async (req, res) => {
+  try {
+    let response = await adminClient.query(
+      q.Call('get_upcoming_events', req.body.user)
+    )
+    res.send({status:'success', message:response});
+  } catch (error) {
+    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
+    return;
+  }
+})
+
+// Get profile info from a session
+/*accountRouter.post("/pref", async(req, res) => {
+  try {
+    let response = await adminClient.query(
+      q.Get(q.Match(q.Index('create_pref'), req.body.user))
+    )
+    res.send({status:'success', message:response.data})
+  } catch (error) {
+    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
+    return;
+  }
+})*/
 
 // Route for setting up account, requirements and responses pending...
 accountRouter.use("/setup", setupRouter);

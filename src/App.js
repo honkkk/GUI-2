@@ -13,76 +13,7 @@ import {
   NavLink,
 } from "react-router-dom";
 
-//This will have to be implemented somehow, but assuming it would be here for now
-var user_games = ["D&D", "monopoly", "exploding kittens", "Chess"]
-
 // Events the user is part of -> request to server with user_data.id
-var user_joined_events = [
-  {
-    id: '4343423',
-    title: 'Game Night hosted by thee andre & rivard',
-    short_location: 'Lowell, MA',
-    date: 'March 27th',
-    status: 'joined',
-    host: 'andrivard4'
-  },
-  {
-    id: '32432432',
-    title: 'Board Game Time!',
-    short_location: 'Norfolk, MA',
-    date: 'April 3rd',
-    status: 'joined',
-    host: 'honklover420'
-  },
-  {
-    id: '76784345',
-    title: 'I don\'t know where I am!',
-    short_location: '????, ?????',
-    date: '????? ?????',
-    status: 'pending',
-    host: 'poojna123'
-  },
-  {
-    id: '76784345',
-    title: 'I don\'t know where I am! hosted by ME',
-    short_location: '????, ?????',
-    date: '????? ?????',
-    status: 'joined',
-    host: 'andrivard4'
-  },
-  {
-    id: '4343423',
-    title: 'Game Night hosted by MEEEE',
-    short_location: 'Lowell, MA',
-    date: 'March 27th',
-    status: 'joined',
-    host: 'honklover420'
-  },
-  {
-    id: '32432432',
-    title: 'Board Game Time!',
-    short_location: 'Norfolk, MA',
-    date: 'April 3rd',
-    status: 'joined',
-    host: 'honklover420'
-  },
-  {
-    id: '76784345',
-    title: 'I don\'t know where I am!',
-    short_location: '????, ?????',
-    date: '????? ?????',
-    status: 'pending',
-    host: 'tes'
-  },
-  {
-    id: '76784345',
-    title: 'I don\'t know where I am!',
-    short_location: '????, ?????',
-    date: '????? ?????',
-    status: 'joined',
-    host: 'testuser'
-  }
-]
 const addGame = (games) => {
   alert('A name was submitted: ' + games.join(', '));
 }
@@ -91,12 +22,13 @@ const addGame = (games) => {
 const App = () => {
 
   const [userData, setUserData] = useState({})
+  const [user_joined_events, set_user_joined_events] = useState(null)
 
   const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
 
   // Checks for a user session, validates it and grabs the user
   useEffect(() => {
-    console.log("useEffect called.");
+    console.log("Called useEffect()");
     // If there is no session on the client side have them log in
     if (!cookies.token) {
       if (window.location.pathname !== "/") {
@@ -106,56 +38,138 @@ const App = () => {
       return;
     }
 
-    //TODO: make this better!
-    if (userData.fName) return;
-    // If we find a session, check if the server has it and grab the user
-    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account",
-    {
-      method:'POST',
-      headers:{
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        session:cookies.token
+    // If we havent gotten the user yet, get them
+    if (!userData.email) {
+      // If we find a session, check if the server has it and grab the user
+      fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account",
+      {
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          session:cookies.token
+        })
       })
-    })
-    .then(function(response) {
-      return response.json()
-    })
-    .then(function(response) {
-      if (response.status === null) {
-        throw Error(response.statusText)
-      }
-      // if we have an internal error, report it
-      if (response.status === "error")
-        throw Error(response.server_message + ", " + response.error_message)
-      // if operation succeeded
-      if (response.status === "success") {
-        // We did not find the session or user, so remove the token as its fake or expired
-        if (!response.message) {
-          console.log(response.message);
-          removeCookie("token");
-          window.location.href = './'
-        } else {
-          // we found the user, so set the user's info
-          console.log(response.message);
+      .then(function(response) {
+        return response.json()
+      })
+      .then(function(response) {
+        if (response.status === null) {
+          throw Error(response.statusText)
+        }
+        // if we have an internal error, report it
+        if (response.status === "error")
+          throw Error(response.server_message + ", " + response.error_message)
+        // if operation succeeded
+        if (response.status === "success") {
+          // We did not find the session or user, so remove the token as its fake or expired
+          if (!response.message) {
+            removeCookie("token");
+            window.location.href = './'
+          } else {
+            // we found the user, so set the user's info
+            setUserData({
+              ...userData,
+              fName:response.message.data.fName,
+              lName:response.message.data.lName,
+              username:response.message.data.username,
+              email:response.message.data.email,
+              birth: new Date(response.message.data.birth),
+              status: response.message.data.status,
+              id: response.message.ref['@ref'].id
+            })
+          }
+        }
+      })
+      .catch(function(error) {
+        removeCookie("token");
+        window.location.href = './'
+        console.log(error);
+      })
+    }
+    // If the user's account is set up, get the preferences for it
+    if (userData.status == "complete" && !userData.games) {
+      fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account/pref",
+      {
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          session:cookies.token
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      })
+      .then(function(response) {
+        if (response.status === null) {
+          throw Error(response.statusText)
+        }
+        // if we have an internal error, report it
+        if (response.status === "error")
+          throw Error(response.server_message + ", " + response.error_message)
+        // if operation succeeded
+        if (response.status === "success") {
           setUserData({
             ...userData,
-            fName:response.message.fName,
-            lName:response.message.lName,
-            username:response.message.username,
-            email:response.message.email,
-            birth: new Date(response.message.birth),
-            status: response.message.status
+            categories: response.message.categories? response.message.categories : [],
+            games: response.message.games? response.message.games: [],
+            locations: response.message.locations ? response.message.locations :[]
           })
         }
-      }
-    })
-    .catch(function(error) {
-      removeCookie("token");
-      window.location.href = './'
-      console.log(error);
-    })
+      })
+      .catch(function(error) {
+        removeCookie("token");
+        window.location.href = './'
+        console.log(error);
+      })
+    }
+
+    // If the user's account is set up, get the preferences for it
+    if (userData.status == "complete" && !user_joined_events) {
+      // Fetch events the user is part of
+      fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account/events",
+      {
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          session:cookies.token
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      })
+      .then(function(response) {
+        if (response.status === null) {
+          throw Error(response.statusText)
+        }
+        // if we have an internal error, report it
+        if (response.status === "error")
+          throw Error(response.server_message + ", " + response.error_message)
+        // if operation succeeded
+        if (response.status === "success") {
+          let events = []
+          response.message.forEach((item, i) => {
+            events.push({
+              id: item.ref['@ref'].id,
+              title: item.data.title,
+              short_location: item.data.city + ", " + item.data.state,
+              date: item.data.date,
+              host: item.data.host,
+              status: 'joined'
+            })
+          });
+          set_user_joined_events(events)
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
+    }
   })
 
   if (!cookies.token) {
@@ -183,7 +197,7 @@ const App = () => {
                     <li> <NavLink exact to="/feed" activeClassName="active">Feed</NavLink></li>
                     <li> <NavLink exact to="/profile" activeClassName="active">Profile</NavLink></li>
                     <li> <NavLink exact to="/create" activeClassName="active">Create</NavLink></li>
-                    <li> <NavLink exact to="/" activeClassName="active">Sign out</NavLink></li>
+                    <li onClick={()=>{removeCookie("token")}}> <NavLink exact to="/" activeClassName="active">Sign out</NavLink></li>
                   </ul>
                 </nav>
               </header>
@@ -194,10 +208,10 @@ const App = () => {
                     <TestPage />
                   </Route>
                   <Route path="/feed">
-                    <FeedPage user={userData} upcoming={user_joined_events}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
+                    <FeedPage user={userData} upcoming={user_joined_events? user_joined_events : []}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
                   </Route>
                   <Route path="/profile">
-                    <ProfilePage user_data={userData} user_games ={user_games} upcoming={user_joined_events} addGame = {addGame}/>
+                    <ProfilePage user_data={userData} upcoming={user_joined_events? user_joined_events : []} addGame = {addGame}/>
                   </Route>
                   <Route path="/create">
                     <CreatePage/>

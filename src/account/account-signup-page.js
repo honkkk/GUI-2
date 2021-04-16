@@ -119,8 +119,6 @@ const SignPage = () => {
     })
   }
 
-  console.log(process.env);
-
   let ret = (
     <div className="sign-page">
       <div className="signup-content">

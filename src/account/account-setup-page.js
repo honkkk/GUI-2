@@ -126,8 +126,6 @@ const AccountSetup = () => {
       if (response.status === "error")
         throw Error(response.server_message + ", " + response.error_message)
       if (response.status === "success") {
-        console.log(response.token);
-        setCookies("token", response.token);
         window.location.href = './feed'
       }
     })
