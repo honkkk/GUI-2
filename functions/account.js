@@ -220,7 +220,7 @@ accountRouter.post("/pref", async (req, res) => {
     res.send({status:'success', message:response});
     return;
   } catch (error) {
-    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
+    res.status(500).send({status: 'error', server_message: "an internal error occured, try again", error_message: error.message})
     return;
   }
 });
@@ -232,7 +232,19 @@ accountRouter.post("/events", async (req, res) => {
     )
     res.send({status:'success', message:response});
   } catch (error) {
-    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
+    res.status(500).send({status: 'error', server_message: "an internal error occured, try again", error_message: error.message})
+    return;
+  }
+})
+
+accountRouter.post("/games", async (req, res) => {
+  try {
+    let response = await adminClient.query(
+      q.Call("add_games", [req.body.user, req.body.games])
+    )
+    res.send({status:'success', message:"updated game list"})
+  } catch (error) {
+    res.status(500).send({status:'error', server_message:"an internal error occured, try again", error_message: error.message})
     return;
   }
 })

@@ -25,14 +25,15 @@ const AddGamesPopup = ({closePopup, addGame}) => {
   const addClick = (event) => {
       setGames([...games, event.target.value])
   }
-  const handleSubmit = event => {
+  const handleSubmit = async (event) => {
+      event.preventDefault();
       let data = [];
       data[0] = document.getElementById('first-game').value;
       for (var i = 0; i < games.length; i++) {
         data[i+1]=games[i]
       }
       addGame(data);
-      event.preventDefault();
+      closePopup();
   }
   return (
     <div className="popup-wrapper">

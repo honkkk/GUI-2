@@ -13,11 +13,6 @@ import {
   NavLink,
 } from "react-router-dom";
 
-// Events the user is part of -> request to server with user_data.id
-const addGame = (games) => {
-  alert('A name was submitted: ' + games.join(', '));
-}
-
 // Our main app component
 const App = () => {
 
@@ -26,9 +21,41 @@ const App = () => {
 
   const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
 
+  // Events the user is part of -> request to server with user_data.id
+  const addGame = (games) => {
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account/games",
+    {
+      method:'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        session:cookies.token,
+        games:games
+      })
+    })
+    .then(function(response) {
+      return response.json()
+    })
+    .then(function(response) {
+      if (response.status === null) {
+        throw Error(response.statusText)
+      }
+      // if we have an internal error, report it
+      if (response.status === "error")
+        throw Error(response.server_message + ", " + response.error_message)
+      // if operation succeeded
+      if (response.status === "success") {
+        setUserData({...userData, games:[...userData.games, ...games]})
+      }
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
+  }
+
   // Checks for a user session, validates it and grabs the user
   useEffect(() => {
-    console.log("Called useEffect()");
     // If there is no session on the client side have them log in
     if (!cookies.token) {
       if (window.location.pathname !== "/") {
