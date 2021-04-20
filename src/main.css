@@ -804,3 +804,47 @@ button.setup-next {
   border-color: red;
   color: red;
 }
+.request-bar{
+  display: flex;
+}
+.request-bar-username{
+  flex: 1;
+  word-break: break-all;
+  margin-right: 10px;
+
+}
+.request-bar-eventname{
+  flex: 3;
+  margin-left: 40px;
+}
+.request-bar-buttons{
+  flex: 1;
+  direction: rtl;
+}
+
+.request-bar-buttons button{
+  padding-left: 10px;
+  margin-left: 10px;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.2);
+}
+.request-bars {
+  width: 100%;
+  position: relative;
+  margin: 10px auto;
+}
+.vl-bar{
+  border-left: 3px solid gray;
+  border-radius: 5px;
+  height: 100px;
+}
+.confirm-button{
+  display: flex;
+  justify-content: center;
+  width: auto;
+}
+.confirm-button button{
+  width: 200px;
+  color: white;
+  background-color: #0091ea;
+  margin-top: 40px;
+}

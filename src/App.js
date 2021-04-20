@@ -1,7 +1,7 @@
 import React, { useEffect, useState} from "react"
 import FeedPage from "./feed/feed-page.js"
 import ProfilePage from "./profile/profile-page.js"
-import TestPage from "./test.js"
+import TestPage from "./requests/test.js"
 import CreatePage from "./create/create-page.js"
 import SignPage from "./account/account-signup-page.js"
 import AccountSetup from "./account/account-setup-page.js"
