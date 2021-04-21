@@ -2,9 +2,10 @@ import React from "react"
 import {add, del} from "../shared/icons.js"
 import {useState} from 'react';
 import { useCookies } from 'react-cookie';
-
+import CreatePopup from "./create-popup.js"
 
 const CreatePage = () => {
+  const [showPopup, setShowPopup] = useState(false)
   const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
   const [title, setTitle] = useState('')
   const [capacity, setCapacity] = useState('')
@@ -28,6 +29,27 @@ const CreatePage = () => {
     "location":false,
     "time": false
   })
+  //will hide or show popup when clicked
+  const togglePopup = () =>{
+    if(showPopup == true){
+      setTitle("");
+      setCapacity("");
+      setDD("");
+      setMM("");
+      setYR("");
+      setTime("");
+      setLocation("");
+      setDetails("");
+      setRPG(false);
+      setBG(false);
+      setCG(false);
+      setVG(false);
+      setState("AL");
+      setGames([]);
+      document.getElementById('create-first-game').value = "";
+    }
+    setShowPopup(!showPopup);
+  }
   //Removes the games using the dataset index.
   const removeClick = (e) => {
     setGames(games.filter( (item, index) => index !=e.target.parentElement.dataset.index));
@@ -169,7 +191,8 @@ const CreatePage = () => {
           throw Error(response.server_message + ", " + response.error_message)
         // if operation succeeded
         if (response.status == "success") {
-          window.location.pathname = "/feed"
+          //window.location.pathname = "/feed"
+          togglePopup();
           return;
         }
       })
@@ -217,10 +240,10 @@ const CreatePage = () => {
             <input type="text" placeholder="Number of max players"  className = {errors["capacity"] ? "errorInput" : ""} value = {capacity} onChange={(e) =>{ setCapacity(e.target.value); updateError("capacity")}}></input>
           </div>
           <div className = "date">
-            <label>DD:</label>
-            <input type="text" placeholder="DD" className = {errors["date"] ? "errorInput" : ""} value = {dd} onChange={(e) =>{ setDD(e.target.value); updateError("date")}}></input>
             <label>MM:</label>
             <input type="text" placeholder="MM" className = {errors["date"] ? "errorInput" : ""} value = {mm} onChange={(e) =>{ setMM(e.target.value); updateError("date")}}></input>
+            <label>DD:</label>
+            <input type="text" placeholder="DD" className = {errors["date"] ? "errorInput" : ""} value = {dd} onChange={(e) =>{ setDD(e.target.value); updateError("date")}}></input>
             <label>YR:</label>
             <input type="text" placeholder="YR" className = {errors["date"] ? "errorInput" : ""} value = {yr} onChange={(e) =>{ setYR(e.target.value); updateError("date")}}></input>
           </div>
@@ -292,6 +315,7 @@ const CreatePage = () => {
             <textarea placeholder="Details" value = {details} onChange={(e) => setDetails(e.target.value)}></textarea>
           </div>
         </div>
+        {showPopup && <CreatePopup closePopup = {togglePopup}/>}
       </div>
     </form>
   )
