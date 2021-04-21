@@ -51,9 +51,9 @@ setupRouter.post("/create", async (req, res) => {
     return;
   }*/
   // Validate date of birth submitted (constrains ensure no overflow when creating the date)
-  let date = new Date(year, month, day, hour, min);
+  let date = new Date(year, month-1, day);
   if (date.getDate() != day || date.getFullYear() != year ||
-      date.getMonth() != month || !(min>=0 && min<60) || !(hour>0 && hour<=24)) {
+      date.getMonth()+1 != month || !(min>=0 && min<60) || !(hour>0 && hour<=24)) {
     res.status(400).send({status: 'error', server_message: "Incorrect or missing date, try again.", error_message: "000"})
     return;
   }
@@ -82,13 +82,14 @@ setupRouter.post("/create", async (req, res) => {
         {
           data: {
             title,
-            details ? details : "",
+            details:details ? details : "",
             city,
             state,
             games,
             capacity,
             catigories,
             date: date.toISOString(),
+            time: hour+":"+min,
             host: req.body.user,
             users:[]
           }

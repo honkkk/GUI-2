@@ -84,7 +84,7 @@ const CreatePage = () => {
   }
   //called before handleSubmit completes, will validate all the input fields before submission.
   function validate(){
-    const date = new Date(yr, mm, dd);
+    const date = new Date(yr, mm-1, dd);
     var currentDate = new Date();
     //Temp = {...errors} as it creates a new object where as temp = errors, passes by refernce which will not reRender
     var temp_error = {...errors};
@@ -97,7 +97,7 @@ const CreatePage = () => {
     if(location == ''){
       temp_error['location'] = true;
     }
-    if (date.getDate() != dd  || date.getMonth() != mm || date.getFullYear() != yr) {
+    if (date.getDate() != dd  || date.getMonth()+1 != mm || date.getFullYear() != yr) {
       temp_error["date"] = true;
     }
     if(yr < currentDate.getFullYear()){
