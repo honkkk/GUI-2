@@ -5,7 +5,7 @@ import EventBarCollection from "../event/event-bar-collection.js"
 import {useState, useEffect} from 'react';
 import { useCookies } from 'react-cookie';
 
-const FeedPage = ({user, upcoming}) => {
+const FeedPage = ({user, upcoming, handlers}) => {
 
   // States to handle selected categories and where upcoming events should show
   // NOTE: given time the slider should become its own component
@@ -73,7 +73,7 @@ const FeedPage = ({user, upcoming}) => {
       {/*Event cards that will have overflow scrolling ability*/}
       <section>
         <h2>Your upcoming events</h2>
-        <EventCardCollection events={upcoming} size={3} />
+        <EventCardCollection events={upcoming} size={3} handlers={handlers}/>
       </section>
 
       <section>
@@ -89,7 +89,7 @@ const FeedPage = ({user, upcoming}) => {
       {/*Needs to be auto generated....*/}
       <section>
         <h2>Events around you </h2>
-        <EventBarCollection events={events? events : []} size={5}/>
+        <EventBarCollection handlers={handlers} events={events? events : []} size={5}/>
       </section>
     </div>
   )

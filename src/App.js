@@ -54,6 +54,40 @@ const App = () => {
     })
   }
 
+  // Sends a request to join an event
+  const joinEvent = (event) => {
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/join/" + event['@ref'].id,
+    {
+      method:'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        session:cookies.token
+      })
+    })
+    .then(function(response) {
+      return response.json()
+    })
+    .then( function(response) {
+      if (response.status === null) {
+        throw Error(response.statusText)
+      }
+      // if we have an internal error, report it
+      if (response.status === "error")
+        throw Error(response.server_message + ", " + response.error_message)
+      // if operation succeeded
+      if (response.status === "success") {
+        console.log(response.message);
+      }
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
+  }
+
+  let event_handlers = {join: joinEvent}
+
   // Checks for a user session, validates it and grabs the user
   useEffect(() => {
     // If there is no session on the client side have them log in
@@ -235,7 +269,7 @@ const App = () => {
                     <TestPage />
                   </Route>
                   <Route path="/feed">
-                    <FeedPage user={userData} upcoming={user_joined_events? user_joined_events : []}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
+                    <FeedPage handlers={event_handlers} user={userData} upcoming={user_joined_events? user_joined_events : []}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
                   </Route>
                   <Route path="/profile">
                     <ProfilePage user_data={userData} upcoming={user_joined_events? user_joined_events : []} addGame = {addGame}/>

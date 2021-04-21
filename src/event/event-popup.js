@@ -8,7 +8,7 @@ import {useState} from 'react';
 // name           (required, string)     name of the event
 // date           (required, string(?))  date for the event
 // users          (required, [user])     a list of the users at the event
-const EventPopup = ({togglePopupController, status, name, id}) => {
+const EventPopup = ({togglePopupController, status, name, id, handlers}) => {
 
   let users = ["A", "B", "C", "D", "E"];
 
@@ -58,7 +58,7 @@ const EventPopup = ({togglePopupController, status, name, id}) => {
           <button><p>...</p></button>
           {status==='joined' && <button><p>Leave</p></button>}
           {status==='pending' && <button><p>Cancel</p></button>}
-          {!status && <button><p>Join</p></button>}
+          {!status && <button onClick={() => {handlers.join(id)}}><p>Join</p></button>}
         </div>
       </div>
     </div>

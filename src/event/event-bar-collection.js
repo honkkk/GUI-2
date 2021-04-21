@@ -4,7 +4,7 @@ import {left_arrow, right_arrow} from "../shared/icons.js"
 import {useState} from 'react';
 
 
-const EventBarCollection = ({events, size=5}) => {
+const EventBarCollection = ({events, size=5, handlers}) => {
 
   const [limit, setLimit] = useState(size);
 
@@ -19,7 +19,7 @@ const EventBarCollection = ({events, size=5}) => {
   for (var i = 0; i < limit; i++) {
     if (!events[i])
       continue;
-    rendered_events.push(<EventBar key={i} location={events[i].short_location} name={events[i].title} date={events[i].date} id={events[i].id}/>)
+    rendered_events.push(<EventBar key={i} handlers={handlers} location={events[i].short_location} name={events[i].title} date={events[i].date} id={events[i].id}/>)
   }
 
 

@@ -30,7 +30,7 @@ setupRouter.use("/", verifySession)
 //  - returns id of game
 setupRouter.post("/create", async (req, res) => {
   const {title, month, day, year, min, hour, details, city, state, games, capacity, catigories} = req.body;
-  if (!title || !details || !city || !state || !games || !capacity || !catigories) {
+  if (!title || !city || !state || !games || !capacity || !catigories) {
     res.status(400).send({status: 'error', server_message: "Missing data, please try again.", error_message: "???"})
     return;
   }
@@ -82,14 +82,15 @@ setupRouter.post("/create", async (req, res) => {
         {
           data: {
             title,
-            details,
+            details ? details : "",
             city,
             state,
             games,
             capacity,
             catigories,
             date: date.toISOString(),
-            host: req.body.user
+            host: req.body.user,
+            users:[]
           }
         }
       )
@@ -262,6 +263,7 @@ setupRouter.post("/join/:id", async (req, res) => {
       )
     )
     res.send(response.data);
+    return;
 
     // Sends the data of the event (not ref because they have it already)
   } catch (error) {
@@ -338,6 +340,28 @@ setupRouter.post("/accept/:id", async (req, res) => {
   } catch (error) {
     if (error.message === "instance not unique") {
       res.status(400).send({status: 'error', server_message: "You already have a request to join this event!", error_message: error.message})
+      return;
+    }
+    res.status(500).send(error.message)
+    return;
+  }
+})
+
+setupRouter.post("/requests", async (req, res) => {
+  try {
+    let response = await adminClient.query(
+      q.Map(
+        q.Paginate(
+          q.Match(q.Index('get_user_requests'), req.body.user)
+        ),
+        q.Lambda('x', q.Select('data', q.Get(q.Var('x'))))
+      )
+    )
+    res.send({status:'success', message:response.data})
+    return;
+  } catch (error) {
+    if (error.message = "instance not found") {
+      res.send({status:'success', message:[]})
       return;
     }
     res.status(500).send(error.message)

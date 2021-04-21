@@ -8,7 +8,7 @@ import EventPopup from './event-popup.js'
 // name           (required, string)     name of the event
 // date           (required, string(?))  date for the event
 // toggleButton   (bool)                 to show button for details or not?
-const EventCard = ({location, name, date, status, id}) => {
+const EventCard = ({location, name, date, status, id, handlers}) => {
   const [togglePopup, setTogglePopup] = useState(false);
 
   const togglePopupController = () => {
@@ -17,7 +17,7 @@ const EventCard = ({location, name, date, status, id}) => {
 
   return (
     <>
-      {togglePopup && <EventPopup togglePopupController={togglePopupController} status={status} name={name} id={id}/>}
+      {togglePopup && <EventPopup togglePopupController={togglePopupController} handlers={handlers} status={status} name={name} id={id}/>}
       <div className={"event event-card " + (status === "joined" ? "event-joined " : "") + (status === "pending" ? "event-pending " : "")} onClick={togglePopupController}>
         <h3>{name}</h3>
         <div className= "event-card-details">
