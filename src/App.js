@@ -56,7 +56,7 @@ const App = () => {
 
   // Sends a request to join an event
   const joinEvent = (event) => {
-    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/join/" + event['@ref'].id,
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/requests/join/" + event['@ref'].id,
     {
       method:'POST',
       headers:{

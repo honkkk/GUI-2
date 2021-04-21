@@ -193,7 +193,15 @@ accountRouter.post("/status", async (req, res) => {
 // Extract the session and inject with user info
 accountRouter.use("/", verifySession);
 
-// Get the user from  a session
+// Route for setting up account, requirements and responses pending...
+accountRouter.use("/setup", setupRouter);
+
+// Gets the user info
+// Expects
+// Body:
+// - user: id of the user returned from verifySession
+// Returns:
+// - object containing the user data
 accountRouter.post("/", async (req, res) => {
   try {
     let response = await adminClient.query(
@@ -211,7 +219,12 @@ accountRouter.post("/", async (req, res) => {
   }
 });
 
-// Get the user from  a session
+// Gets the user preferences
+// Expects
+// Body:
+// - user: id of the user returned from verifySession
+// Returns:
+// - object containing the user preferences data
 accountRouter.post("/pref", async (req, res) => {
   try {
     let response = await adminClient.query(
@@ -225,6 +238,12 @@ accountRouter.post("/pref", async (req, res) => {
   }
 });
 
+// Gets events the user is part of / hosting
+// Expects
+// Body:
+// - user: id of the user returned from verifySession
+// Returns:
+// - object containing all the events the user is in
 accountRouter.post("/events", async (req, res) => {
   try {
     let response = await adminClient.query(
@@ -237,6 +256,13 @@ accountRouter.post("/events", async (req, res) => {
   }
 })
 
+// Updates users game list
+// Expects:
+// Body:
+// - user: id of the user returned from verifySession
+// - games: an array of game names [string]
+// Returns:
+// - success or error
 accountRouter.post("/games", async (req, res) => {
   try {
     let response = await adminClient.query(
@@ -248,22 +274,6 @@ accountRouter.post("/games", async (req, res) => {
     return;
   }
 })
-
-// Get profile info from a session
-/*accountRouter.post("/pref", async(req, res) => {
-  try {
-    let response = await adminClient.query(
-      q.Get(q.Match(q.Index('create_pref'), req.body.user))
-    )
-    res.send({status:'success', message:response.data})
-  } catch (error) {
-    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
-    return;
-  }
-})*/
-
-// Route for setting up account, requirements and responses pending...
-accountRouter.use("/setup", setupRouter);
 
 // Hashes password before storing in DB
 // password: string - the user's raw text password

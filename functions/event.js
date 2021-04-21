@@ -2,13 +2,17 @@ const express = require('express');
 const faunadb = require('faunadb');
 const crypto = require('crypto');
 const verifySession = require('./verify_session.js');
+const requestRouter = require('./requests.js')
 
-const setupRouter = express();
+const eventRouter = express();
 const adminClient = new faunadb.Client({secret:"fnAEGDCqcLACAApJFk5QaTFV_saJhibLSf6nyHYY"});
 const q = faunadb.query;
 
 // Extract the session and inject with user info
-setupRouter.use("/", verifySession)
+eventRouter.use("/", verifySession)
+
+// Handle event join requests
+eventRouter.use("/requests", requestRouter);
 
 // Create an event
 // Expects:
@@ -28,8 +32,10 @@ setupRouter.use("/", verifySession)
 // Action:
 //  - adds event to database
 //  - returns id of game
-setupRouter.post("/create", async (req, res) => {
+eventRouter.post("/create", async (req, res) => {
   const {title, month, day, year, min, hour, details, city, state, games, capacity, catigories} = req.body;
+
+  // Check that all required data is here
   if (!title || !city || !state || !games || !capacity || !catigories) {
     res.status(400).send({status: 'error', server_message: "Missing data, please try again.", error_message: "???"})
     return;
@@ -40,17 +46,12 @@ setupRouter.post("/create", async (req, res) => {
     return;
   }
 
+  // Ensure capacity is Invalid
   if (isNaN(capacity) || capacity <= 0 || capacity >= 50) {
     res.status(400).send({status: 'error', server_message: "Please provide a capacity between 1 and 50.", error_message: "???"})
     return;
   }
-  // Makes sure a list is past as games
-  // DEBUG: This has been removed to make postman requests, add back in production.
-  /*if (!Array.isArray(games)) {
-    res.status(400).send({status: 'error', server_message: "Game list is not correct, try again.", error_message: "000"})
-    return;
-  }*/
-  // Validate date of birth submitted (constrains ensure no overflow when creating the date)
+  // Validate date submitted (constrains ensure no overflow when creating the date)
   let date = new Date(year, month-1, day);
   if (date.getDate() != day || date.getFullYear() != year ||
       date.getMonth()+1 != month || !(min>=0 && min<60) || !(hour>0 && hour<=24)) {
@@ -112,7 +113,7 @@ setupRouter.post("/create", async (req, res) => {
 //  - user : string
 // Action:
 //  - deletes event from DB
-setupRouter.post("/delete/:id", async (req, res) => {
+eventRouter.post("/delete/:id", async (req, res) => {
   // Verify that id is in proper format
   const id_re = /[0-9]{18}$/
   if (!id_re.test(req.params.id)) {
@@ -148,26 +149,13 @@ setupRouter.post("/delete/:id", async (req, res) => {
   res.send("Event deleted!")
 });
 
-// Updates an event
-// Expects:
-// Params:
-//  - id
-// Body:
-//  - user : string
-//  - data to update : obj
-// Action:
-//  - deletes event from DB
-setupRouter.post("/update:id", async (req, res) => {
-  res.send("This is a work in progress...");
-});
-
 // Gets a specific event
 // Expects:
 // Params:
 //  - id
 // Action:
 //  - returns details on an event
-setupRouter.post("/get/:id", async (req, res) => {
+eventRouter.post("/get/:id", async (req, res) => {
 
   // Checks to make sure the id's format is correct
   const id_re = /[0-9]{18}$/
@@ -198,7 +186,8 @@ setupRouter.post("/get/:id", async (req, res) => {
   }
 });
 
-setupRouter.post("/get", async (req, res) => {
+// Get all events (this needs to be refined...)
+eventRouter.post("/get", async (req, res) => {
   // Gets the event from the DB
   try {
     const response = await adminClient.query(
@@ -212,163 +201,4 @@ setupRouter.post("/get", async (req, res) => {
   }
 });
 
-
-setupRouter.post("/join/:id", async (req, res) => {
-
-  // Checks to make sure the id's format is correct
-  const id_re = /[0-9]{18}$/
-  if (!id_re.test(req.params.id)) {
-    res.status(400).send("Invalid or missing id, try again.")
-    return;
-  }
-
-  // Gets the event from the DB
-  try {
-    const event = (await adminClient.query(
-      q.If(
-        q.Exists(q.Ref(q.Collection("event"),req.params.id)),
-        q.Get(q.Ref(q.Collection("event"),req.params.id)),
-        false
-      )
-    ));
-    // if not found, report it
-    if (!event) {
-      res.status(400).send("Event not found.")
-      return;
-    }
-    if (event.data.capacity <= event.data.users.length) {
-      res.status(400).send("This event is at capacity and cannot be joined.")
-      return;
-    }
-    if (event.data.host == req.user) {
-      res.status(400).send("You are own this event.")
-      return;
-    }
-    event.data.users.forEach((item, i) => {
-      if (item == req.body.user) {
-        res.status(400).send("You are already in this event.")
-        return;
-      }
-    });
-
-    const response = await adminClient.query(
-      q.Create(
-        q.Collection('request'),
-        {
-          data: {
-            event:req.params.id,
-            sender:req.body.user,
-            host: event.data.host
-          }
-        }
-      )
-    )
-    res.send(response.data);
-    return;
-
-    // Sends the data of the event (not ref because they have it already)
-  } catch (error) {
-    if (error.message === "instance not unique") {
-      res.status(400).send({status: 'error', server_message: "You already have a request to join this event!", error_message: error.message})
-      return;
-    }
-    res.status(500).send(error.message)
-    return;
-  }
-});
-
-
-setupRouter.post("/accept/:id", async (req, res) => {
-  // Checks to make sure the id's format is correct
-  const id_re = /[0-9]{18}$/
-  if (!id_re.test(req.params.id)) {
-    res.status(400).send("Invalid or missing id, try again.")
-    return;
-  }
-
-  // Gets the request from the DB
-  try {
-    const request = (await adminClient.query(
-      q.If(
-        q.Exists(q.Ref(q.Collection("request"),req.params.id)),
-        q.Get(q.Ref(q.Collection("request"),req.params.id)),
-        false
-      )
-    ));
-    // if not found, report it
-    if (!request) {
-      res.status(400).send("Request not found.")
-      return;
-    }
-
-    if (req.body.user != request.data.host) {
-      res.status(401).send("You are not authorized to manage this request.");
-      return;
-    }
-
-    if (req.body.status == "accept") {
-      let update_response = await adminClient.query(
-        q.Let(
-          {
-            ref: q.Ref(q.Collection("event"), request.data.event),
-            doc: q.Get(q.Var("ref")),
-            array: q.Select(["data", "users"], q.Var("doc"))
-          },
-          q.If(
-            q.LT(q.Count(q.Var("array")), q.Select(['data', 'capacity'], q.Var("doc"))),
-            q.Do(
-              q.Update(q.Var("ref"), { data: { users: q.Append(request.data.sender, q.Var("array")) } }),
-              q.Delete(request.ref)
-            ),
-            false
-          )
-        )
-      )
-      res.send(update_response);
-      return;
-    }
-
-    if (req.body.status == "deny") {
-      await adminClient.query(q.Delete(request.ref));
-      res.send("deleted");
-      return;
-    }
-
-    res.send("what do you want from me...");
-    return;
-
-    // Sends the data of the event (not ref because they have it already)
-  } catch (error) {
-    if (error.message === "instance not unique") {
-      res.status(400).send({status: 'error', server_message: "You already have a request to join this event!", error_message: error.message})
-      return;
-    }
-    res.status(500).send(error.message)
-    return;
-  }
-})
-
-setupRouter.post("/requests", async (req, res) => {
-  try {
-    let response = await adminClient.query(
-      q.Map(
-        q.Paginate(
-          q.Match(q.Index('get_user_requests'), req.body.user)
-        ),
-        q.Lambda('x', q.Select('data', q.Get(q.Var('x'))))
-      )
-    )
-    res.send({status:'success', message:response.data})
-    return;
-  } catch (error) {
-    if (error.message = "instance not found") {
-      res.send({status:'success', message:[]})
-      return;
-    }
-    res.status(500).send(error.message)
-    return;
-  }
-})
-
-
-module.exports = setupRouter;
+module.exports = eventRouter;
