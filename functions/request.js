@@ -22,38 +22,38 @@ requestRouter.post("/join/:id", async (req, res) => {
   // Checks to make sure the id's format is correct
   const id_re = /[0-9]{18}$/
   if (!id_re.test(req.params.id)) {
-    res.status(400).send("Invalid or missing id, try again.")
+    res.status(400).send({status:'error', message:"Invalid or missing id, try again."})
     return;
   }
 
   // Gets the event from the DB
   try {
-    const event = (await adminClient.query(
+    const event = await adminClient.query(
       q.If(
         q.Exists(q.Ref(q.Collection("event"),req.params.id)),
         q.Get(q.Ref(q.Collection("event"),req.params.id)),
         false
       )
-    ));
+    );
     // if not found, report it
     if (!event) {
-      res.status(400).send("Event not found.")
+      res.status(400).send({status:'error', message:"Event not found, it may have been deleted."})
       return;
     }
     // if event full, report it
     if (event.data.capacity <= event.data.users.length) {
-      res.status(400).send("This event is at capacity and cannot be joined.")
+      res.status(400).send({status:'error', message:"This event is at capacity and cannot be joined."})
       return;
     }
     // if request to join is from the host, report it
-    if (event.data.host == req.user) {
-      res.status(400).send("You are own this event.")
+    if (event.data.host == req.body.user) {
+      res.status(400).send({status:'error', message:"You are the owner of this event."})
       return;
     }
     // If user is already in event, report it
     event.data.users.forEach((item, i) => {
       if (item == req.body.user) {
-        res.status(400).send("You are already in this event.")
+        res.status(400).send({status:'error', message:"You are already in this event."})
         return;
       }
     });
@@ -70,17 +70,16 @@ requestRouter.post("/join/:id", async (req, res) => {
         }
       )
     )
-    res.send(response.data);
-    return;
+    res.send({status:'success'});
 
     // Sends the data of the event (not ref because they have it already)
   } catch (error) {
     // If user already has request sent for the specific event, report it
     if (error.message === "instance not unique") {
-      res.status(400).send({status: 'error', server_message: "You already have a request to join this event!", error_message: error.message})
+      res.status(400).send({status: 'error', message: "You already have a request to join this event!"})
       return;
     }
-    res.status(500).send(error.message)
+    res.status(500).send({status: 'error', message: "An unknown error occured: " + error.message})
     return;
   }
 });
@@ -141,14 +140,14 @@ requestRouter.post("/reply/:id", async (req, res) => {
           )
         )
       )
-      res.send(update_response);
+      res.send({status:'success'});
       return;
     }
 
     // if deny, just delete the request
     if (req.body.status == "deny") {
       await adminClient.query(q.Delete(request.ref));
-      res.send("deleted");
+      res.send({status:'success'});
       return;
     }
 
@@ -174,7 +173,7 @@ requestRouter.post("/", async (req, res) => {
         q.Paginate(
           q.Match(q.Index('get_user_requests'), req.body.user)
         ),
-        q.Lambda('x', q.Select('data', q.Get(q.Var('x'))))
+        q.Lambda('x', q.Get(q.Var('x')))
       )
     )
     res.send({status:'success', message:response.data})

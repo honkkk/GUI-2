@@ -2,7 +2,7 @@ const express = require('express');
 const faunadb = require('faunadb');
 const crypto = require('crypto');
 const verifySession = require('./verify_session.js');
-const requestRouter = require('./requests.js')
+const requestRouter = require('./request.js')
 
 const eventRouter = express();
 const adminClient = new faunadb.Client({secret:"fnAEGDCqcLACAApJFk5QaTFV_saJhibLSf6nyHYY"});

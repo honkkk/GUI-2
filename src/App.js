@@ -18,6 +18,7 @@ const App = () => {
 
   const [userData, setUserData] = useState({})
   const [user_joined_events, set_user_joined_events] = useState(null)
+  const [user_requested_events, set_user_requested_events] = useState(null)
 
   const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
 
@@ -71,18 +72,18 @@ const App = () => {
     })
     .then( function(response) {
       if (response.status === null) {
-        throw Error(response.statusText)
+        throw Error(response.message)
       }
       // if we have an internal error, report it
       if (response.status === "error")
-        throw Error(response.server_message + ", " + response.error_message)
+        throw Error(response.message)
       // if operation succeeded
       if (response.status === "success") {
-        console.log(response.message);
+        console.log("Request sent!");
       }
     })
     .catch(function(error) {
-      console.log(error);
+      console.error(error);
     })
   }
 
