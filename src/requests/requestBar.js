@@ -1,12 +1,17 @@
 import React from "react"
 import { useCookies, CookiesProvider } from 'react-cookie';
 
-const RequestBar = ({user, event, request, onRequestChange}) => {
+const RequestBar = ({user, event, request, onRequestChange, isSent, onCancel, getSession}) => {
 
   const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
 
   let buttonHandler = (isAccept) => {
-    console.log(isAccept, user, event, request);
+
+    let session = getSession()
+    if (!session) {
+      return false;
+    }
+
     fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/requests/reply/" + request,
     {
       method:'POST',
@@ -14,7 +19,7 @@ const RequestBar = ({user, event, request, onRequestChange}) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        session:cookies.token,
+        session,
         status: isAccept?"accept":"deny"
       })
     })
@@ -43,15 +48,22 @@ const RequestBar = ({user, event, request, onRequestChange}) => {
     <div className = "event request-bars">
       <div className="request-bar">
         <div className = "request-bar-username">
-          <h3 >{user}</h3>
+          <h3 >{isSent ? event: user}</h3>
         </div>
-        <div className="vl-bar"></div>
-        <div className = "request-bar-eventname">
-          <h3 >{event}</h3>
-        </div>
+        {!isSent &&
+          <>
+            <div className={!isSent? "vl-bar " : "vl-bar-hidden"}></div>
+            <div className = "request-bar-eventname">
+              <h3 >{event}</h3>
+            </div>
+          </>
+        }
         <div className = "request-bar-buttons">
-          <button onClick={()=>buttonHandler(false)} style={{backgroundColor: "#fe5c5c", color:"white"}}><strong>Decline</strong></button>
-          <button onClick={()=>buttonHandler(true)}>Accept</button>
+        {isSent ?
+          <button onClick={()=>onCancel(request)}>Cancel</button> :
+          <><button onClick={()=>buttonHandler(false)} style={{backgroundColor: "#fe5c5c", color:"white"}}><strong>Decline</strong></button>
+          <button onClick={()=>buttonHandler(true)}>Accept</button></>
+        }
         </div>
       </div>
     </div>

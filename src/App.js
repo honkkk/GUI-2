@@ -16,9 +16,10 @@ import {
 // Our main app component
 const App = () => {
 
-  const [userData, setUserData] = useState({})
+  const [userData, setUserData] = useState(null)
   const [user_joined_events, set_user_joined_events] = useState(null)
-  const [user_requested_events, set_user_requested_events] = useState(null)
+  const [user_requested_event_ids, set_user_requested_ids] = useState(null)
+  const [events, setEvents] = useState(null);
 
   const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
 
@@ -57,7 +58,7 @@ const App = () => {
 
   // Sends a request to join an event
   const joinEvent = (event) => {
-    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/requests/join/" + event['@ref'].id,
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/requests/join/" + event,
     {
       method:'POST',
       headers:{
@@ -79,7 +80,9 @@ const App = () => {
         throw Error(response.message)
       // if operation succeeded
       if (response.status === "success") {
-        console.log("Request sent!");
+        console.log(response);
+        set_user_requested_ids([...user_requested_event_ids, {event:response.message.data.event, request:response.message.ref['@ref'].id}])
+        setEvents(events.filter( item => item.id != event))
       }
     })
     .catch(function(error) {
@@ -87,21 +90,59 @@ const App = () => {
     })
   }
 
-  let event_handlers = {join: joinEvent}
+  // Sends a request to join an event
+  const cancelRequest = (id) => {
+    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/requests/cancel/" + id,
+    {
+      method:'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        session:cookies.token
+      })
+    })
+    .then(function(response) {
+      return response.json()
+    })
+    .then( function(response) {
+      if (response.status === null) {
+        throw Error(response.message)
+      }
+      // if we have an internal error, report it
+      if (response.status === "error")
+        throw Error(response.message)
+      // if operation succeeded
+      if (response.status === "success") {
+        set_user_requested_ids(user_requested_event_ids.filter(item => item.request != id))
+        console.log("Cancled request!");
+      }
+    })
+    .catch(function(error) {
+      console.error(error);
+    })
+  }
+
+  let getSession = () => {
+    if (!cookies.token) {
+      if (window.location.pathname !== "/") {
+        window.location.pathname = "/"
+      }
+      return false;
+    }
+    return cookies.token;
+  }
 
   // Checks for a user session, validates it and grabs the user
   useEffect(() => {
     // If there is no session on the client side have them log in
-    if (!cookies.token) {
-      if (window.location.pathname !== "/") {
-        setUserData({})
-        window.location.pathname = "/"
-      }
+    let session = getSession()
+    if (!session) {
       return;
     }
 
     // If we havent gotten the user yet, get them
-    if (!userData.email) {
+    if (!userData) {
       // If we find a session, check if the server has it and grab the user
       fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account",
       {
@@ -110,7 +151,7 @@ const App = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          session:cookies.token
+          session
         })
       })
       .then(function(response) {
@@ -132,7 +173,6 @@ const App = () => {
           } else {
             // we found the user, so set the user's info
             setUserData({
-              ...userData,
               fName:response.message.data.fName,
               lName:response.message.data.lName,
               username:response.message.data.username,
@@ -151,7 +191,7 @@ const App = () => {
       })
     }
     // If the user's account is set up, get the preferences for it
-    if (userData.status == "complete" && !userData.games) {
+    if (userData && userData.status == "complete" && !userData.games) {
       fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account/pref",
       {
         method:'POST',
@@ -159,7 +199,7 @@ const App = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          session:cookies.token
+          session
         })
       })
       .then(function(response) {
@@ -190,7 +230,7 @@ const App = () => {
     }
 
     // If the user's account is set up, get the preferences for it
-    if (userData.status == "complete" && !user_joined_events) {
+    if (userData && userData.status == "complete" && !user_joined_events) {
       // Fetch events the user is part of
       fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/account/events",
       {
@@ -199,7 +239,7 @@ const App = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          session:cookies.token
+          session
         })
       })
       .then(function(response) {
@@ -226,6 +266,85 @@ const App = () => {
             })
           });
           set_user_joined_events(events)
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
+    }
+
+    if (!user_requested_event_ids) {
+      fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/requests/sent",
+      {
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          session
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      })
+      .then(function(response) {
+        if (response.status === null) {
+          throw Error(response.statusText)
+        }
+        // if we have an internal error, report it
+        if (response.status === "error")
+          throw Error(response.server_message + ", " + response.error_message)
+        // if operation succeeded
+        if (response.status === "success") {
+          let requests = []
+          response.message.forEach((item) => {
+            requests.push({event:item.data.event, request:item.ref['@ref'].id})
+          });
+          set_user_requested_ids(requests)
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
+    }
+    if (!events) {
+      fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/get",
+      {
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          session
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      })
+      .then(function(response) {
+        if (response.status === null) {
+          throw Error(response.statusText)
+        }
+        // if we have an internal error, report it
+        if (response.status === "error")
+          throw Error(response.server_message + ", " + response.error_message)
+        // if operation succeeded
+        if (response.status === "success") {
+          // We did not find the session or user, so remove the token as its fake or expired
+          let response_events = []
+          response.message.forEach((item) => {
+            if (!user_requested_event_ids.find( element => element.event == item.ref['@ref'].id) &&
+                !user_joined_events.find( element => element.id == item.ref['@ref'].id)) {
+              response_events.push({
+                id:item.ref['@ref'].id,
+                title:item.data.title,
+                short_location: item.data.city + ", " + item.data.state,
+                date: item.data.date
+              })
+            }
+          });
+
+          setEvents(response_events);
         }
       })
       .catch(function(error) {
@@ -267,16 +386,16 @@ const App = () => {
               <div className="content">
                 <Switch>
                   <Route path="/test">
-                    <TestPage />
+                    <TestPage handlers = {{session:getSession, cancel:cancelRequest}} sentRequests={user_requested_event_ids}/>
                   </Route>
                   <Route path="/feed">
-                    <FeedPage handlers={event_handlers} user={userData} upcoming={user_joined_events? user_joined_events : []}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
+                    <FeedPage handlers={{session:getSession, join:joinEvent}} user={userData} upcoming={user_joined_events} events={events}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
                   </Route>
                   <Route path="/profile">
-                    <ProfilePage user_data={userData} upcoming={user_joined_events? user_joined_events : []} addGame = {addGame}/>
+                    <ProfilePage handlers={{session:getSession}} user_data={userData} upcoming={user_joined_events} addGame={addGame}/>
                   </Route>
                   <Route path="/create">
-                    <CreatePage/>
+                    <CreatePage handlers={{session:getSession}}/>
                   </Route>
                 </Switch>
               </div>

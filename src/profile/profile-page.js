@@ -13,7 +13,7 @@ const ProfilePage = ({user_data, upcoming, addGame}) => {
   const [showAddGamesPopup, setShowAddGamesPopup] = useState(false)
   const [showFilterList, setShowFilterList] = useState(false)
 
-  if (Object.keys(user_data).length == 0) return <p>Loading...</p>
+  if (!user_data || !upcoming) return <p>Loading...</p>
 
   const toggleGamesPopup  = () =>{
     setShowGamesPopup(!showGamesPopup)
@@ -28,7 +28,6 @@ const ProfilePage = ({user_data, upcoming, addGame}) => {
   const toggleFilterList = () =>{
     setShowFilterList(!showFilterList)
   }
-  console.log(user_data);
   let ret = (
     <div className = "profile-background">
       <div className = "profile-page">

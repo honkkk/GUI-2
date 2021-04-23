@@ -4,9 +4,8 @@ import EventBar from "../event/event-bar.js"
 import RequestBar from "./requestBar.js"
 import { useCookies, CookiesProvider } from 'react-cookie';
 
-const TestPage = () => {
+const TestPage = ({handlers, sentRequests}) => {
   const [requestData, setRequestData] = useState(null);
-  const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
 
   let requestHandler = (id) => {
     setRequestData(requestData.filter(item => item.request != id))
@@ -15,6 +14,9 @@ const TestPage = () => {
   useEffect(() => {
     if (requestData)
       return;
+    let session = handlers.session();
+    if (!session)
+      return;
     fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/requests",
     {
       method:'POST',
@@ -22,7 +24,7 @@ const TestPage = () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        session:cookies.token
+        session:session
       })
     })
     .then(function(response) {
@@ -49,18 +51,29 @@ const TestPage = () => {
     })
   })
 
-  if (!requestData) {
-    return <p>loading...</p>
-  }
 
-  if (requestData.length == 0) {
-    return <p>No requests right now...</p>
-  }
 
   return (
     <div>
       <h1>Requests</h1>
-      {requestData.map((request) => (<RequestBar user = {request.user} event = {request.event} request = {request.request} onRequestChange={requestHandler}/>))}
+      <h2>Join requests</h2>
+      {
+        requestData ?
+        requestData.length == 0 ?
+          <p>You have no requests to respond to.</p>
+        :
+        requestData.map((request) => (<RequestBar user = {request.user} event = {request.event} request = {request.request} onRequestChange={requestHandler} getSession={handlers.session}/>))
+        : <p>loading...</p>
+      }
+      <h2>Sent requests</h2>
+      {
+        sentRequests ?
+        sentRequests.length == 0 ?
+          <p>You have no pending requests.</p>
+        :
+        sentRequests.map((request) => (<RequestBar isSent={true} event={request.event} onCancel={handlers.cancel} request={request.request}/>))
+        : <p>loading...</p>
+      }
     </div>
   )
 }

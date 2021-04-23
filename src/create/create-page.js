@@ -4,9 +4,8 @@ import {useState} from 'react';
 import { useCookies } from 'react-cookie';
 import CreatePopup from "./create-popup.js"
 
-const CreatePage = () => {
+const CreatePage = ({handlers}) => {
   const [showPopup, setShowPopup] = useState(false)
-  const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
   const [title, setTitle] = useState('')
   const [capacity, setCapacity] = useState('')
   const [dd, setDD] = useState('')
@@ -127,12 +126,16 @@ const CreatePage = () => {
 
   const handleSubmit = event => {
       event.preventDefault();
+
+      let session = handlers.session();
+      if (!session)
+        return;
+
       let data = [];
       data[0] = document.getElementById('create-first-game').value;
       for (var i = 0; i < games.length; i++) {
         data[i+1]=games[i]
       }
-      console.log(validate());
       if(!validate())
         return;
 
@@ -154,8 +157,6 @@ const CreatePage = () => {
         "selected": rpg
       }
     ]
-      //console.log(data + "\ntitle:\n" + title + "\ncapcity:\n" + capacity + "\nDD:\n" + dd + "\nMM:\n" + mm + "\nYR:\n" + yr + "\nTime\n" + time + "\nlocation\n" + location + "\ndetails\n" + details)
-      //console.log("Rpg: " + rpg + " bg: " + bg + " cg: " + cg + " vg: " +vg + " period: " + period + " state: " + state)
       fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/create",
       {
         method:'POST',
@@ -163,7 +164,7 @@ const CreatePage = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          session:cookies.token,
+          session,
           title,
           month: mm,
           day: dd,

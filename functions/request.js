@@ -51,12 +51,12 @@ requestRouter.post("/join/:id", async (req, res) => {
       return;
     }
     // If user is already in event, report it
-    event.data.users.forEach((item, i) => {
+    for (var item of event.data.users) {
       if (item == req.body.user) {
         res.status(400).send({status:'error', message:"You are already in this event."})
         return;
       }
-    });
+    }
     // Attempt to create entry
     const response = await adminClient.query(
       q.Create(
@@ -70,7 +70,7 @@ requestRouter.post("/join/:id", async (req, res) => {
         }
       )
     )
-    res.send({status:'success'});
+    res.send({status:'success', message:response});
 
     // Sends the data of the event (not ref because they have it already)
   } catch (error) {
@@ -187,6 +187,72 @@ requestRouter.post("/", async (req, res) => {
     return;
   }
 })
+
+// Get all requests sent by a user
+// Expects
+// Body:
+// - user
+// Returns
+//  A list of requests or an error
+requestRouter.post("/sent", async (req, res) => {
+  try {
+    let response = await adminClient.query(
+      q.Map(
+        q.Paginate(
+          q.Match(q.Index('get_user_sent_requests'), req.body.user)
+        ),
+        q.Lambda('x', q.Get(q.Var('x')))
+      )
+    )
+    res.send({status:'success', message:response.data})
+    return;
+  } catch (error) {
+    if (error.message = "instance not found") {
+      res.send({status:'success', message:[]})
+      return;
+    }
+    res.status(500).send(error.message)
+    return;
+  }
+})
+
+requestRouter.post("/cancel/:id", async (req, res) => {
+
+  // Checks to make sure the id's format is correct
+  const id_re = /[0-9]{18}$/
+  if (!id_re.test(req.params.id)) {
+    res.status(400).send({status:'error', message:"Invalid or missing id, try again."})
+    return;
+  }
+
+  // Gets the event from the DB
+  try {
+
+    // Attempt to create entry
+    const response = await adminClient.query(
+      q.If(
+        q.And(
+          q.Exists(q.Ref(q.Collection('request'), req.params.id)),
+          q.Equals(q.Select(['data', 'sender'],
+            q.Get(q.Ref(q.Collection('request'), req.params.id))),
+            req.body.user
+          )
+        ),
+        q.Delete(q.Ref(q.Collection('request'), req.params.id)),
+        false
+      )
+    )
+    if (response)
+      res.send({status:'success'});
+    else
+      res.send({status:'error', message:'The request cannot be deleted at this time.'});
+
+    // Sends the data of the event (not ref because they have it already)
+  } catch (error) {
+    res.status(500).send({status: 'error', message: "An unknown error occured: " + error.message})
+    return;
+  }
+});
 
 
 module.exports = requestRouter;
