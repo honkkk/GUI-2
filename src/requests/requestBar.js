@@ -60,9 +60,24 @@ const RequestBar = ({user, event, request, onRequestChange, isSent, onCancel, ge
         }
         <div className = "request-bar-buttons">
         {isSent ?
-          <button onClick={()=>onCancel(request)}>Cancel</button> :
-          <><button onClick={()=>buttonHandler(false)} style={{backgroundColor: "#fe5c5c", color:"white"}}><strong>Decline</strong></button>
-          <button onClick={()=>buttonHandler(true)}>Accept</button></>
+          <button onClick={(e)=>{
+            var loader = document.createElement('div');
+            loader.classList.add('loader');
+            e.target.parentNode.replaceChild(loader, e.target)
+            onCancel(request)
+          }}>Cancel</button> :
+          <><button onClick={(e)=>{
+            var loader = document.createElement('div');
+            loader.classList.add('loader');
+            e.target.parentNode.parentNode.replaceChild(loader, e.target.parentNode)
+            buttonHandler(false)
+          }} style={{backgroundColor: "#fe5c5c", color:"white"}}><strong>Decline</strong></button>
+          <button onClick={(e)=>{
+            var loader = document.createElement('div');
+            loader.classList.add('loader');
+            e.target.parentNode.parentNode.replaceChild(loader, e.target.parentNode)
+            buttonHandler(true)
+          }}>Accept</button></>
         }
         </div>
       </div>

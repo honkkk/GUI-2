@@ -55,10 +55,14 @@ const EventPopup = ({togglePopupController, status, name, id, handlers}) => {
           <p>2</p>
         </div>
         <div className="expanded-bottom-buttons">
-          <button><p>...</p></button>
-          {status==='joined' && <button><p>Leave</p></button>}
-          {status==='pending' && <button><p>Cancel</p></button>}
-          {!status && <button onClick={() => {handlers.join(id)}}><p>Join</p></button>}
+          {!status && <button className="join" onClick={
+            (e) => {
+              var loader = document.createElement('div');
+              loader.classList.add('loader');
+              e.target.parentNode.replaceChild(loader, e.target)
+              handlers.join(id)
+            }
+          }><p>Join</p></button>}
         </div>
       </div>
     </div>
