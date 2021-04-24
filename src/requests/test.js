@@ -4,55 +4,7 @@ import EventBar from "../event/event-bar.js"
 import RequestBar from "./requestBar.js"
 import { useCookies, CookiesProvider } from 'react-cookie';
 
-const TestPage = ({handlers, sentRequests}) => {
-  const [requestData, setRequestData] = useState(null);
-
-  let requestHandler = (id) => {
-    setRequestData(requestData.filter(item => item.request != id))
-  }
-
-  useEffect(() => {
-    if (requestData)
-      return;
-    let session = handlers.session();
-    if (!session)
-      return;
-    fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/requests",
-    {
-      method:'POST',
-      headers:{
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        session:session
-      })
-    })
-    .then(function(response) {
-      return response.json()
-    })
-    .then(function(response) {
-      if (response.status === null) {
-        throw Error(response.statusText)
-      }
-      // if we have an internal error, report it
-      if (response.status === "error")
-        throw Error(response.server_message + ", " + response.error_message)
-      // if operation succeeded
-      if (response.status === "success") {
-        let join_requests = []
-        response.message.forEach((item) => {
-          join_requests.push({user: item.data.sender, event: item.data.event, request: item.ref['@ref'].id})
-        });
-        setRequestData(join_requests);
-      }
-    })
-    .catch(function(error) {
-      console.log(error);
-    })
-  })
-
-
-
+const TestPage = ({requestData, handlers, sentRequests}) => {
   return (
     <div>
       <h1>Requests</h1>
@@ -62,7 +14,7 @@ const TestPage = ({handlers, sentRequests}) => {
         requestData.length == 0 ?
           <p>You have no requests to respond to.</p>
         :
-        requestData.map((request) => (<RequestBar user = {request.user} event = {request.event} request = {request.request} onRequestChange={requestHandler} getSession={handlers.session}/>))
+        requestData.map((request) => (<RequestBar user = {request.user} event = {request.event} request = {request.request} onRequestChange={handlers.join} getSession={handlers.session}/>))
         : <p>loading...</p>
       }
       <h2>Sent requests</h2>

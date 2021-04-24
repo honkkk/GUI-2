@@ -19,6 +19,7 @@ const App = () => {
   const [userData, setUserData] = useState(null)
   const [user_joined_events, set_user_joined_events] = useState(null)
   const [user_requested_event_ids, set_user_requested_ids] = useState(null)
+  const [requestData, setRequestData] = useState(null);
   const [events, setEvents] = useState(null);
 
   const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
@@ -121,6 +122,10 @@ const App = () => {
     .catch(function(error) {
       console.error(error);
     })
+  }
+
+  const joinRequestHandler = (id) => {
+    setRequestData(requestData.filter(item => item.request != id))
   }
 
   let getSession = () => {
@@ -307,6 +312,7 @@ const App = () => {
         console.log(error);
       })
     }
+
     if (!events) {
       fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/get",
       {
@@ -351,6 +357,41 @@ const App = () => {
         console.log(error);
       })
     }
+
+    if (!requestData) {
+      fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/requests",
+      {
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          session:session
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      })
+      .then(function(response) {
+        if (response.status === null) {
+          throw Error(response.statusText)
+        }
+        // if we have an internal error, report it
+        if (response.status === "error")
+          throw Error(response.server_message + ", " + response.error_message)
+        // if operation succeeded
+        if (response.status === "success") {
+          let join_requests = []
+          response.message.forEach((item) => {
+            join_requests.push({user: item.data.sender, event: item.data.event, request: item.ref['@ref'].id})
+          });
+          setRequestData(join_requests);
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
+    }
   })
 
   if (!cookies.token) {
@@ -374,10 +415,10 @@ const App = () => {
               <header className="App-header">
                 <nav>
                   <ul>
-                    <li> <NavLink exact to="/test" activeClassName="active">Test</NavLink></li>
                     <li> <NavLink exact to="/feed" activeClassName="active">Feed</NavLink></li>
-                    <li> <NavLink exact to="/profile" activeClassName="active">Profile</NavLink></li>
                     <li> <NavLink exact to="/create" activeClassName="active">Create</NavLink></li>
+                    <li> <NavLink exact to="/test" activeClassName="active">Requests{(requestData && requestData.length > 0) && " (" + requestData.length + ") "}</NavLink></li>
+                    <li> <NavLink exact to="/profile" activeClassName="active">Profile</NavLink></li>
                     <li onClick={()=>{removeCookie("token")}}> <NavLink exact to="/" activeClassName="active">Sign out</NavLink></li>
                   </ul>
                 </nav>
@@ -386,7 +427,7 @@ const App = () => {
               <div className="content">
                 <Switch>
                   <Route path="/test">
-                    <TestPage handlers = {{session:getSession, cancel:cancelRequest}} sentRequests={user_requested_event_ids}/>
+                    <TestPage handlers = {{session:getSession, cancel:cancelRequest, join:joinRequestHandler}} sentRequests={user_requested_event_ids} requestData={requestData}/>
                   </Route>
                   <Route path="/feed">
                     <FeedPage handlers={{session:getSession, join:joinEvent}} user={userData} upcoming={user_joined_events} events={events}/> {/*We pass user data and user events here. new events will be fetched in FeedPage*/}
