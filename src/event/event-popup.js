@@ -8,10 +8,9 @@ import {useState} from 'react';
 // name           (required, string)     name of the event
 // date           (required, string(?))  date for the event
 // users          (required, [user])     a list of the users at the event
-const EventPopup = ({togglePopupController, status, name, id, handlers}) => {
+const EventPopup = ({users, date, location, capacity, host, togglePopupController, games, details, status, name, id, handlers}) => {
 
-  let users = ["A", "B", "C", "D", "E"];
-
+  console.log(details);
   return (
     <div className="popup-wrapper">
       <div className="popup event-expanded">
@@ -19,21 +18,16 @@ const EventPopup = ({togglePopupController, status, name, id, handlers}) => {
         <h2> {name} </h2>
         <div className="event-expanded-tags">
           {game(26, 26)}
-          <p>13 Rockwood Rd Norfolk, MA </p>
+          <p>{location}</p>
           {clock(26, 26)}
-          <p>Mon. March 13th </p>
+          <p>{date}</p>
         </div>
-        <p>The user can give a dumpling? about what this gamenight will be like, along with things they want to do, what they expect from others, and other details like food/ drinks or something like that.</p>
+        <p>{details}</p>
         <div className="line"></div>
         <h3>Games</h3>
-        <ul>
-          <li><p>Catan</p></li>
-          <li><p>Super Smash Bros Ultimate</p></li>
-          <li><p>Munchkins</p></li>
-          <li><p>Cards Against Humanity</p></li>
-          <li><p>Betrayal at House on the Hill w/ Widow's Walk</p></li>
-          <li><p>Mario Kart 8</p></li>
-        </ul>
+        <div>
+          {games.map((game) => (<p>{game}</p>))}
+        </div>
         <div className="line"></div>
         <h3>Participants (3/6)</h3>
         <div className="expanded-participants">
@@ -44,15 +38,10 @@ const EventPopup = ({togglePopupController, status, name, id, handlers}) => {
           <div>
             {user(20, 20)}
           </div>
-          <p>Username (Host)</p>
+          <p>(host) {host}</p>
           <p>18</p>
           <p>3</p>
-          <div>
-            {user(20, 20)}
-          </div>
-          <p>Username</p>
-          <p>19</p>
-          <p>2</p>
+          {users.map((username) => ([<div>{user(20, 20)}</div>,<p>{username}</p>, <p>19</p>,<p>5</p>]))}
         </div>
         <div className="expanded-bottom-buttons">
           {!status && <button className="join" onClick={

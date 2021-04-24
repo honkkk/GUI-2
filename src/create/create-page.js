@@ -7,6 +7,7 @@ import CreatePopup from "./create-popup.js"
 const CreatePage = ({handlers}) => {
   const [showPopup, setShowPopup] = useState(false)
   const [title, setTitle] = useState('')
+  const [firstGame, setFirstGame] = useState('')
   const [capacity, setCapacity] = useState('')
   const [dd, setDD] = useState('')
   const [mm, setMM] = useState('')
@@ -26,7 +27,8 @@ const CreatePage = ({handlers}) => {
     "capacity": false,
     "date": false,
     "location":false,
-    "time": false
+    "time": false,
+    "games": false
   })
   //will hide or show popup when clicked
   const togglePopup = () =>{
@@ -58,7 +60,7 @@ const CreatePage = ({handlers}) => {
   var createInputs = games.map(( el,i) => (
       <div key={"gameNum-" + i} className = "create-input" data-index={i}>
         <label>Game {i+2}:</label>
-        <input type="text" data-index={i} placeholder={"Game " + (i+2)} value = {el} onChange={handleChange} />
+        <input type="text" className = {errors["games"] && games[i] == "" ? "errorInput" : ""} data-index={i} placeholder={"Game " + (i+2)} value = {el} onChange={handleChange} />
         <button data-index={i} className = "button-no-style" onClick={removeClick}>{del(20,20)}</button>
       </div> )
   );
@@ -71,8 +73,10 @@ const CreatePage = ({handlers}) => {
       //console.log(event.target.value)
   }
   //adds a new game to the list of games
+  //Resets the games error so newly added game inputs arent errored by default
   const addClick = (event) => {
       setGames([...games, event.target.value])
+      updateError("games");
       event.preventDefault();
   }
   //This function undos the error upon change of the input field
@@ -83,39 +87,59 @@ const CreatePage = ({handlers}) => {
   }
   //called before handleSubmit completes, will validate all the input fields before submission.
   function validate(){
+    var validated = true;
     const date = new Date(yr, mm-1, dd);
     var currentDate = new Date();
     //Temp = {...errors} as it creates a new object where as temp = errors, passes by refernce which will not reRender
     var temp_error = {...errors};
     if(title == ''){
       temp_error['title'] = true;
+      validated = false;
     }
     if(capacity == '' || capacity < 2 || !Number.isInteger(parseFloat(capacity))){
       temp_error['capacity'] = true;
+      validated = false;
     }
     if(location == ''){
       temp_error['location'] = true;
+      validated = false;
     }
     if (date.getDate() != dd  || date.getMonth()+1 != mm || date.getFullYear() != yr) {
       temp_error["date"] = true;
+      validated = false;
     }
     if(yr < currentDate.getFullYear()){
       temp_error["date"] = true;
+      validated = false;
     }
     if(mm < (currentDate.getMonth()+1) && yr == currentDate.getFullYear()){
       temp_error["date"] = true;
+      validated = false;
     }
     if(dd < currentDate.getDate() && mm == (currentDate.getMonth()+1) && yr == currentDate.getFullYear()){
       temp_error["date"] = true;
+      validated = false;
     }
     if(location == ""){
       temp_error['location'] = true;
+      validated = false;
     }
     if(time == ""){
       temp_error['time'] = true;
+      validated = false;
+    }
+    for (var i = 0; i < games.length; i++) {
+      if(games[i] == ""){
+        temp_error["games"] = true;
+        validated = false;
+      }
+    }
+    if(document.getElementById('create-first-game').value == ""){
+      temp_error["games"] = true;
+      validated = false;
     }
     setErrors(temp_error)
-    return true;
+    return validated;
   }
   // Show backend errors
   const errorHandler = (error_message) => {
@@ -217,7 +241,7 @@ const CreatePage = ({handlers}) => {
           </div>
           <div className = "create-input">
             <label>Game 1:</label>
-            <input type="text" id = "create-first-game" placeholder="Game 1"></input>
+            <input type="text" className = {errors["games"] && firstGame == "" ? "errorInput" : ""} id = "create-first-game" placeholder="Game 1" onChange={(e) =>{ setFirstGame(e.target.value);}}></input>
           </div>
           {createInputs}
           <div className = "add-game">

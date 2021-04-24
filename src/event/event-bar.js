@@ -9,11 +9,9 @@ import {useState} from 'react';
 // name           (required, string)     name of the event
 // date           (required, string(?))  date for the event
 // users          (required, [user])     a list of the users at the event
-const EventBar = ({location, name, date, status, id, handlers}) => {
+const EventBar = ({ users, capacity, host, location, games, details, name, date, status, id, handlers}) => {
 
   const [togglePopup, setTogglePopup] = useState(false);
-
-  let users = ["A", "B", "C", "D", "E"];
 
   const togglePopupController = () => {
     setTogglePopup(!togglePopup);
@@ -22,7 +20,7 @@ const EventBar = ({location, name, date, status, id, handlers}) => {
 
   let ret = (
     <>
-      {togglePopup && <EventPopup handlers={handlers} togglePopupController={togglePopupController} status={status} name={name} id={id}/>}
+      {togglePopup && <EventPopup date = {date} location={location} users = {users} capacity = {capacity} host = {host} games = {games} handlers={handlers} togglePopupController={togglePopupController} status={status} name={name} id={id}/>}
       <div className={"event event-bar " + (status === "joined" ? "event-joined " : "") + (status === "pending" ? "event-pending " : "")}>
         <button className="event-bar-expand" onClick={togglePopupController}> <p>Details</p></button>
         <div className="event-user-status user-icon-list">

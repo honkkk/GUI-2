@@ -262,7 +262,11 @@ const App = () => {
               short_location: item.data.city + ", " + item.data.state,
               date: item.data.date,
               host: item.data.host,
-              status: 'joined'
+              status: 'joined',
+              details: item.data.details,
+              games: item.data.games,
+              capacity: item.data.capacity,
+              users: item.data.users
             })
           });
           set_user_joined_events(events)
@@ -339,7 +343,12 @@ const App = () => {
                 id:item.ref['@ref'].id,
                 title:item.data.title,
                 short_location: item.data.city + ", " + item.data.state,
-                date: item.data.date
+                date: item.data.date,
+                host: item.data.host,
+                details: item.data.details,
+                games: item.data.games,
+                capacity: item.data.capacity,
+                users: item.data.users
               })
             }
           });
