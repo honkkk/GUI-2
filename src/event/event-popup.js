@@ -10,7 +10,8 @@ import {useState} from 'react';
 // users          (required, [user])     a list of the users at the event
 const EventPopup = ({users, date, location, capacity, host, togglePopupController, games, details, status, name, id, handlers}) => {
 
-  console.log(details);
+  console.log("rendering new popup for " + name);
+
   return (
     <div className="popup-wrapper">
       <div className="popup event-expanded">

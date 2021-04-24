@@ -115,6 +115,7 @@ const App = () => {
         throw Error(response.message)
       // if operation succeeded
       if (response.status === "success") {
+        console.log(" test...");
         set_user_requested_ids(user_requested_event_ids.filter(item => item.request != id))
         console.log("Cancled request!");
       }

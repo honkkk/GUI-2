@@ -12,7 +12,7 @@ const EventCardCollection = ({events, size, handlers}) => {
   // Renders 3 of the next events to show
   let rendered_upcoming_events = [];
   for (var i = upcomingIndex; i < events.length && i < upcomingIndex + size; i++) {
-    rendered_upcoming_events.push(<EventCard key={i} users={events[i].users} capacity={events[i].capacity} host = {events[i].host} games={events[i].games} details = {events[i].details} handlers={handlers} location={events[i].short_location} id={events[i].id} name={events[i].title} date={events[i].date} id={events[i].id} status={events[i].status}/>)
+    rendered_upcoming_events.push(<EventCard key={events[i].id} users={events[i].users} capacity={events[i].capacity} host = {events[i].host} games={events[i].games} details = {events[i].details} handlers={handlers} location={events[i].short_location} id={events[i].id} name={events[i].title} date={events[i].date} id={events[i].id} status={events[i].status}/>)
   }
 
   // Change start index of rendered events

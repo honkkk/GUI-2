@@ -1,9 +1,9 @@
 import React from "react"
-import { useCookies, CookiesProvider } from 'react-cookie';
+import {useState} from "react"
 
-const RequestBar = ({user, event, request, onRequestChange, isSent, onCancel, getSession}) => {
+const RequestBar = ({user, event, request, onRequestChange, isSent, onCancel, getSession, ky}) => {
 
-  const [cookies, setCookies, removeCookie] = useCookies(['game1up-user-token']);
+  const [loading, setLoading] = useState(false)
 
   let buttonHandler = (isAccept) => {
 
@@ -44,6 +44,8 @@ const RequestBar = ({user, event, request, onRequestChange, isSent, onCancel, ge
 
   }
 
+  console.log(loading);
+
   return (
     <div className = "event request-bars">
       <div className="request-bar">
@@ -59,25 +61,10 @@ const RequestBar = ({user, event, request, onRequestChange, isSent, onCancel, ge
           </>
         }
         <div className = "request-bar-buttons">
-        {isSent ?
-          <button onClick={(e)=>{
-            var loader = document.createElement('div');
-            loader.classList.add('loader');
-            e.target.parentNode.replaceChild(loader, e.target)
-            onCancel(request)
-          }}>Cancel</button> :
-          <><button onClick={(e)=>{
-            var loader = document.createElement('div');
-            loader.classList.add('loader');
-            e.target.parentNode.parentNode.replaceChild(loader, e.target.parentNode)
-            buttonHandler(false)
-          }} style={{backgroundColor: "#fe5c5c", color:"white"}}><strong>Decline</strong></button>
-          <button onClick={(e)=>{
-            var loader = document.createElement('div');
-            loader.classList.add('loader');
-            e.target.parentNode.parentNode.replaceChild(loader, e.target.parentNode)
-            buttonHandler(true)
-          }}>Accept</button></>
+        {loading? <div className="loader"></div> : isSent ?
+          <button onClick={(e)=>{setLoading(true);onCancel(request)}}>Cancel</button> :
+          <><button onClick={(e)=>{setLoading(true);buttonHandler(false)}} style={{backgroundColor: "#fe5c5c", color:"white"}}><strong>Decline</strong></button>
+          <button onClick={(e)=>{setLoading(true);buttonHandler(true)}}>Accept</button></>
         }
         </div>
       </div>
