@@ -163,24 +163,13 @@ const CreatePage = ({handlers}) => {
       if(!validate())
         return;
 
-      let catigories = [
+      let catigories =
       {
-        "id": "board",
-        "selected": bg
-      },
-      {
-        "id": "video",
-        "selected": vg
-      },
-      {
-        "id": "card",
-        "selected": cg
-      },
-      {
-        "id": "rp",
-        "selected": rpg
+        "board": bg,
+        "video": vg,
+        "card": cg,
+        "rp": rpg
       }
-    ]
       fetch(process.env.REACT_APP_SERVER_URL + "/.netlify/functions/api/event/create",
       {
         method:'POST',

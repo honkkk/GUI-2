@@ -10,13 +10,26 @@ const FeedPage = ({user, upcoming, handlers, events}) => {
   // NOTE: given time the slider should become its own component
   const [categories, setCategories] = useState([]);
 
+  const [display_events, set_display_events] = useState(events);
 
-  // Handles changes of what catigories are selcted
+
+  // Handles changes of what categories are selcted
   const category_select_handler = (id) => {
     let result = categories.filter( (item) => item !== id );
     if (result.length === categories.length)
       result.push(id)
     setCategories(result);
+    console.log(result);
+    let shownEvents=[]
+    if (events) {
+      console.log(
+        events.filter( (event) => {
+          return categories.some( (category) => {
+            return event.categories
+          })
+        })
+      )
+    }
   }
 
 
@@ -33,10 +46,10 @@ const FeedPage = ({user, upcoming, handlers, events}) => {
       <section>
       <h2>Categories</h2>
       <div className="scroll-full-width">
-        <CategoryCard id={0} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/board.jpg"} name="Board Games"/>
-        <CategoryCard id={1} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/video.jpg"} name="Video Games"/>
-        <CategoryCard id={2} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/card.jpg"} name="Card Games"/>
-        <CategoryCard id={3} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/rp.jpg"} name="Role Playing"/>
+        <CategoryCard id={"board"} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/board.jpg"} name="Board Games"/>
+        <CategoryCard id={"video"} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/video.jpg"} name="Video Games"/>
+        <CategoryCard id={"card"} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/card.jpg"} name="Card Games"/>
+        <CategoryCard id={"rp"} onSelect={category_select_handler} img={process.env.PUBLIC_URL + "/rp.jpg"} name="Role Playing"/>
       </div>
       </section>
 

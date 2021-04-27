@@ -34,8 +34,8 @@ accountRouter.post("/login", async (req, res) => {
   try {
     const response = await adminClient.query(
       q.If (
-        q.Exists(q.Match(q.Index("get_user_from_email"), email)),
-        q.Get(q.Match(q.Index("get_user_from_email"), email)),
+        q.Exists(q.Match(q.Index("get_user_from_email"), email.toLowerCase())),
+        q.Get(q.Match(q.Index("get_user_from_email"), email.toLowerCase())),
         false
       )
     )

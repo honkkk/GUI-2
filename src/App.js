@@ -355,7 +355,8 @@ const App = () => {
                 details: item.data.details,
                 games: item.data.games,
                 capacity: item.data.capacity,
-                users: item.data.users
+                users: item.data.users,
+                categories: item.data.categories
               })
             }
           });
