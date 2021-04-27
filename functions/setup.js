@@ -35,7 +35,7 @@ setupRouter.post("/user", async (req, res) => {
   // Validate date of birth submitted (constrains ensure no overflow when creating the date)
   date = new Date(birth_year, birth_month, birth_day);
   if (date.getDate() != birth_day || date.getFullYear() != birth_year ||
-      date.getMonth() != birth_month || birth_year > 2100 || birth_month > 11 ||
+      date.getMonth() != birth_month || birth_year > 2100 || birth_month > 12 ||
       birth_day > 31 || birth_year < 1900 || birth_month < 0 || birth_day < 0) {
     res.status(400).send({status: 'error', server_message: "Incorrect or missing date, try again.", error_message: "000"})
     return;

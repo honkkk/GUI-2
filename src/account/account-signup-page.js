@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 const SignPage = () => {
   const [toggleSignup, setToggleSignup] = useState(false);
   const [cookies, setCookies] = useCookies(['game1up-user-token']);
-
+  const [showPassword, setShowPassword] = useState(false);
   const toggleSignupController = () => {
     setToggleSignup(!toggleSignup);
     document.getElementById('error').style.display = 'none';
@@ -132,8 +132,10 @@ const SignPage = () => {
             </label>
             <label>
               <p> Password: </p>
-              <input type="password" id="password"/>
+              <input type={showPassword ? "text" : "password"} id="password"/>
             </label>
+            <input type = "checkbox" name = "passwordCheckbox" onChange={(e) => setShowPassword(e.currentTarget.checked)}/>
+            <label for="passwordCheckbox">Show Password</label>
           </>)
         }
         { toggleSignup && (

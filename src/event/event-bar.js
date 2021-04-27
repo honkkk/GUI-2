@@ -2,6 +2,7 @@ import React from "react"
 import {game, dice, clock, user, del} from "../shared/icons.js"
 import UserList from "../shared/user-list.js"
 import EventPopup from './event-popup.js'
+import DateString from "../shared/date-string.js"
 import {useState} from 'react';
 
 // EventBar component is used to show events in a bar format
@@ -35,7 +36,7 @@ const EventBar = ({ users, capacity, host, location, games, details, name, date,
           {game(22, 22)}
           <p>{location}</p>
           {clock(22, 22)}
-          <p>{date}</p>
+          <DateString date = {date}/>
         </div>
       </div>
     </>

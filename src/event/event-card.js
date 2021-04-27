@@ -2,6 +2,7 @@ import React from "react"
 import {game, dice, clock, del, user} from "../shared/icons.js"
 import {useState} from 'react';
 import EventPopup from './event-popup.js'
+import DateString from "../shared/date-string.js"
 
 // EventCard component is used to show events in a card format
 // location       (required, string)     location for an event
@@ -24,7 +25,7 @@ const EventCard = ({users, capacity, host, location, games, details, name, date,
           {game(22, 22)}
           <p>{location}</p>
           {clock(22, 22)}
-          <p>{date}</p>
+          <DateString date = {date}/>
         </div>
       </div>
     </>

@@ -12,9 +12,15 @@ const ProfilePage = ({user_data, upcoming, addGame}) => {
   const [showGamesPopup, setShowGamesPopup] = useState(false)
   const [showAddGamesPopup, setShowAddGamesPopup] = useState(false)
   const [showFilterList, setShowFilterList] = useState(false)
+  if (!user_data || !user_data.locations || !upcoming ) return <p>Loading...</p>
+  var locName = "";
+  if(user_data.locations.length == 0){
+    locName = "Location not set";
+  }
 
-  if (!user_data || !upcoming) return <p>Loading...</p>
-
+  else{
+    locName = user_data.locations[0].city.charAt(0).toUpperCase() + user_data.locations[0].city.slice(1) + ", " + user_data.locations[0].state.toUpperCase();
+  }
   const toggleGamesPopup  = () =>{
     setShowGamesPopup(!showGamesPopup)
   }
@@ -32,7 +38,7 @@ const ProfilePage = ({user_data, upcoming, addGame}) => {
     <div className = "profile-background">
       <div className = "profile-page">
         <div><img className = "profile-pic" src={process.env.PUBLIC_URL + "./profilePic.PNG"} /></div>
-        <UserInfo name = {user_data.fName +" "+ user_data.lName} userName = {user_data.username} location = {user_data.city +", " + user_data.state}/>
+        <UserInfo name = {user_data.fName +" "+ user_data.lName} userName = {user_data.username} location = { locName }/>
         <div>
       </div>
       <div className = "profile-buttons">
