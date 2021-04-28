@@ -11,7 +11,7 @@ const AddGamesPopup = ({closePopup, addGame}) => {
 
   var createInputs = games.map(( el,i) => (
       <div key={"gamer-" + i} className = "create-input" data-index={i}>
-        //error && games[i] == "" ? "errorInput" : "" will show an error if the input is blank and there is some kind of error
+        {/*error && games[i] == "" ? "errorInput" : "" will show an error if the input is blank and there is some kind of error*/}
         <input type="text" className = {error && games[i] == "" ? "errorInput" : ""} data-index={i} value = {el} onChange={handleChange} />
         <button data-index={i} className = "button-no-style" onClick={removeClick}>{del(20,20)}</button>
       </div> )
