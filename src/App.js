@@ -81,7 +81,6 @@ const App = () => {
         throw Error(response.message)
       // if operation succeeded
       if (response.status === "success") {
-        console.log(response);
         set_user_requested_ids([...user_requested_event_ids, {event:response.message.data.event, request:response.message.ref['@ref'].id}])
         setEvents(events.filter( item => item.id != event))
       }

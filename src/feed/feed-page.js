@@ -12,32 +12,27 @@ const FeedPage = ({user, upcoming, handlers, events}) => {
   // NOTE: given time the slider should become its own component
   const [categories, setCategories] = useState([]);
 
-  const [display_events, set_display_events] = useState(events);
-
-  if (!display_events && events ) {
-    set_display_events(events);
-    console.log(events);
+  const filter_events_handler = (result) => {
+    if (events) {
+      if (result.length > 0 ) {
+        return events.filter( (event) => {
+          return result.some( (category) => {
+            return event.categories[category]
+          })
+        })
+      }
+      return events
+    }
   }
 
+  let display_events = filter_events_handler(categories);
 
   // Handles changes of what categories are selcted
   const category_select_handler = (id) => {
     let result = categories.filter( (item) => item !== id );
     if (result.length === categories.length)
       result.push(id)
-    if (events) {
-      if (result.length > 0 ) {
-        set_display_events (
-          events.filter( (event) => {
-            return result.some( (category) => {
-              return event.categories[category]
-            })
-          })
-        )
-      } else {
-        set_display_events(events)
-      }
-    }
+    display_events = filter_events_handler(result);
     setCategories(result);
   }
 
