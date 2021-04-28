@@ -163,7 +163,7 @@ const CreatePage = ({handlers}) => {
       if(!validate())
         return;
 
-      let catigories =
+      let categories =
       {
         "board": bg,
         "video": vg,
@@ -185,7 +185,7 @@ const CreatePage = ({handlers}) => {
           hour: time.split(":")[0],
           min: time.split(":")[1],
           details: details? details : "",
-          catigories: catigories,
+          categories,
           city: location,
           capacity:parseInt(capacity),
           state,

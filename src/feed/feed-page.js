@@ -12,24 +12,31 @@ const FeedPage = ({user, upcoming, handlers, events}) => {
 
   const [display_events, set_display_events] = useState(events);
 
+  if (!display_events && events ) {
+    set_display_events(events);
+    console.log(events);
+  }
+
 
   // Handles changes of what categories are selcted
   const category_select_handler = (id) => {
     let result = categories.filter( (item) => item !== id );
     if (result.length === categories.length)
       result.push(id)
-    setCategories(result);
-    console.log(result);
-    let shownEvents=[]
     if (events) {
-      console.log(
-        events.filter( (event) => {
-          return categories.some( (category) => {
-            return event.categories
+      if (result.length > 0 ) {
+        set_display_events (
+          events.filter( (event) => {
+            return result.some( (category) => {
+              return event.categories[category]
+            })
           })
-        })
-      )
+        )
+      } else {
+        set_display_events(events)
+      }
     }
+    setCategories(result);
   }
 
 
@@ -56,7 +63,7 @@ const FeedPage = ({user, upcoming, handlers, events}) => {
       {/*Needs to be auto generated....*/}
       <section>
         <h2>Events around you </h2>
-        {events ? <EventBarCollection handlers={handlers} events={events} size={5}/> : <p>Loading...</p>}
+        {display_events ? <EventBarCollection handlers={handlers} events={display_events} size={5}/> : <p>Loading...</p>}
       </section>
     </div>
   )

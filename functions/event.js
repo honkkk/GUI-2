@@ -33,10 +33,10 @@ eventRouter.use("/requests", requestRouter);
 //  - adds event to database
 //  - returns id of game
 eventRouter.post("/create", async (req, res) => {
-  const {title, month, day, year, min, hour, details, city, state, games, capacity, catigories} = req.body;
+  const {title, month, day, year, min, hour, details, city, state, games, capacity, categories} = req.body;
 
   // Check that all required data is here
-  if (!title || !city || !state || !games || !capacity || !catigories) {
+  if (!title || !city || !state || !games || !capacity || !categories) {
     res.status(400).send({status: 'error', server_message: "Missing data, please try again.", error_message: "???"})
     return;
   }
@@ -88,7 +88,7 @@ eventRouter.post("/create", async (req, res) => {
             state,
             games,
             capacity,
-            catigories,
+            categories,
             date: date.toISOString(),
             time: hour+":"+min,
             host: req.body.user,
