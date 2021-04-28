@@ -3,6 +3,8 @@ import CategoryCard from "../shared/category-card.js"
 import EventCardCollection from "../event/event-card-collection.js"
 import EventBarCollection from "../event/event-bar-collection.js"
 import {useState, useEffect} from 'react';
+import { HashLink as Link } from 'react-router-hash-link';
+import {sad} from "../shared/icons.js"
 
 const FeedPage = ({user, upcoming, handlers, events}) => {
 
@@ -47,7 +49,18 @@ const FeedPage = ({user, upcoming, handlers, events}) => {
       {/*Event cards that will have overflow scrolling ability*/}
       <section>
         <h2>Your upcoming events</h2>
-        {upcoming ? <EventCardCollection events={upcoming} size={3} handlers={handlers}/> : <p>Loading...</p>}
+        {
+          upcoming ?
+            upcoming.length > 0 ?
+              <EventCardCollection events={upcoming} size={3} handlers={handlers}/>
+            :
+              <div className="no-event">
+                <h3> You don't have any upcoming events</h3>
+                <Link to='#events'>Join an event here!</Link>
+              </div>
+          :
+            <p>Loading...</p>
+        }
       </section>
 
       <section>
@@ -62,8 +75,19 @@ const FeedPage = ({user, upcoming, handlers, events}) => {
 
       {/*Needs to be auto generated....*/}
       <section>
-        <h2>Events around you </h2>
-        {display_events ? <EventBarCollection handlers={handlers} events={display_events} size={5}/> : <p>Loading...</p>}
+        <h2 id="events">Events around you </h2>
+        {
+        display_events ?
+          display_events.length > 0 ?
+            <EventBarCollection handlers={handlers} events={display_events} size={5}/>
+          :
+            <div className="no-event">
+              <h3>No events found</h3>
+              {sad(200, 200)}
+            </div>
+        :
+          <p>Loading...</p>
+        }
       </section>
     </div>
   )

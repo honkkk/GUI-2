@@ -147,8 +147,11 @@ nav ul li {
 }
 
 nav a {
-  text-decoration: none;
   color: white;
+}
+
+a {
+  text-decoration: none;
 }
 
 nav .active {
@@ -461,6 +464,33 @@ button.join p {
 .scroll-full-width {
   /*width: 100%;
   overflow: auto;*/
+}
+
+.no-event {
+  text-align: center;
+  padding: 30px 30px 0;
+}
+
+.no-event h3 {
+  font-size: 2rem;
+  line-height: unset;
+}
+
+.no-event a {
+  display: block;
+  width: 300px;
+  margin: 20px auto 0;
+  line-height: unset;
+  padding: 10px 30px;
+  background-color: #193144;
+  color:white;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.no-event svg{
+  fill:rgb(115, 112, 112)
 }
 
 .scroll-event-cards {

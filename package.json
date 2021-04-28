@@ -13,6 +13,7 @@
     "react-cookie": "^4.0.3",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.2.0",
+    "react-router-hash-link": "^2.4.0",
     "react-scripts": "^4.0.3",
     "serverless-http": "^2.7.0"
   },
