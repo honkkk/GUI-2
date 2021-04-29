@@ -10,7 +10,7 @@ import {useState} from 'react';
 // name           (required, string)     name of the event
 // date           (required, string(?))  date for the event
 // users          (required, [user])     a list of the users at the event
-const EventBar = ({ users, capacity, host, location, games, details, name, date, status, id, handlers}) => {
+const EventBar = ({ users, capacity, host, location, games, details, name, date, status, id, handlers, categories}) => {
 
   const [togglePopup, setTogglePopup] = useState(false);
 
@@ -18,6 +18,18 @@ const EventBar = ({ users, capacity, host, location, games, details, name, date,
     setTogglePopup(!togglePopup);
   }
 
+  let category_string = "";
+
+  const name_map = {board: 'Board Game', rp: "Role Playing", video:'Video Game', card:"Card Game"}
+
+  for (var category in categories) {
+    if (categories[category])
+      category_string += (name_map[category] + ", ")
+  }
+
+  category_string = category_string.substring(0, category_string.length - 2)
+
+  console.log(category_string);
 
   let ret = (
     <>
@@ -32,7 +44,7 @@ const EventBar = ({ users, capacity, host, location, games, details, name, date,
         </div>
         <div className="event-bar-details">
           {dice(22, 22)}
-          <p>List of some games, This list can be long, if it's too long, cut it off, etc. </p>
+          <p>{category_string == ""? "No categories set" : category_string}</p>
           {game(22, 22)}
           <p>{location}</p>
           {clock(22, 22)}

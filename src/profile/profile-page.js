@@ -47,7 +47,7 @@ const ProfilePage = ({user_data, upcoming, addGame}) => {
         </button>
         <div className="vl"></div>
         <button className = "button-no-style" onClick = {toggleFilterList}>
-          {user_data.games && <HostedEvents hosted = {upcoming.filter((upcoming) => upcoming.host == user_data.id).length}/>}
+          {user_data.games && <HostedEvents count={upcoming.length} show={showFilterList} hosted = {upcoming.filter((upcoming) => upcoming.host == user_data.id).length}/>}
         </button>
       </div>
       </div>

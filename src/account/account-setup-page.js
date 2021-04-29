@@ -73,7 +73,7 @@ const AccountSetup = () => {
     e.value = ""
   }
   const removeGame = (e) => {
-    setGameList(gameList.filter( (item, index) => index !==e.target.parentElement.dataset.index));
+    setGameList(gameList.filter( (item, index) => index !=e.target.parentElement.dataset.index));
   }
 
   // Handles a user adding or removing a location from the list
@@ -84,7 +84,7 @@ const AccountSetup = () => {
     e_city.value = "";
   }
   const removeLocation = (e) => {
-    setLocationList(locationList.filter( (item, index) => index !==e.target.parentElement.dataset.index));
+    setLocationList(locationList.filter( (item, index) => index !=e.target.parentElement.dataset.index));
   }
 
   // Handles changes of what catigories are selcted

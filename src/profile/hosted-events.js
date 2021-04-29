@@ -1,15 +1,21 @@
 import React from "react"
 
-const HostedEvents = ({hosted}) => {
+const HostedEvents = ({hosted, show, count}) => {
+  if (!show) {
+    return (
+      <div style={{textAlign : "center"}}>
+        <h2>Show Hosted</h2>
+        <h2>Events ({hosted})</h2>
+      </div>
+    )
+  }
 
-  let ret = (
+  return (
     <div style={{textAlign : "center"}}>
-      <h2>Hosted Events</h2>
-      <h2>({hosted})</h2>
+      <h2>Show All </h2>
+      <h2>Events ({count})</h2>
     </div>
   )
-
-  return ret;
 }
 
 export default HostedEvents

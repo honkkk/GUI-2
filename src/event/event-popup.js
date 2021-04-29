@@ -33,17 +33,11 @@ const EventPopup = ({users, date, location, capacity, host, togglePopupControlle
         <div className="line"></div>
         <h3>Participants (3/6)</h3>
         <div className="expanded-participants">
-          <div></div>
-          <p style={{'fontWeight':'bold'}}> Username </p>
-          <p style={{'fontWeight':'bold'}}> Age</p>
-          <p style={{'fontWeight':'bold'}}> Gamenights Participated </p>
           <div>
             {user(20, 20)}
           </div>
           <p>(host) {host}</p>
-          <p>18</p>
-          <p>3</p>
-          {users.map((username) => ([<div>{user(20, 20)}</div>,<p>{username}</p>, <p>19</p>,<p>5</p>]))}
+          {users.map((username) => ([<div>{user(20, 20)}</div>,<p>{username}</p>]))}
         </div>
         <div className="expanded-bottom-buttons">
           {!status && <button className="join" onClick={

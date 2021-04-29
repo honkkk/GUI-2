@@ -307,10 +307,11 @@ button.button-no-style {
 }
 
 .expanded-participants {
-  text-align: center;
+  margin-left:30px;
   grid-row-gap: 10px;
+  grid-column-gap: 40px;
   display: grid;
-  grid-template-columns: 30px repeat(3, 1fr);
+  grid-template-columns: 30px auto;
 }
 
 .category-card {
