@@ -219,6 +219,70 @@ accountRouter.post("/", async (req, res) => {
   }
 });
 
+// Gets info on another user from their id
+// Expects
+// Body:
+// - user: id of the user returned from verifySession
+// - param.id: id of the user to look up
+// Returns:
+// - object containing the user data
+accountRouter.post("/get/:id", async (req, res) => {
+
+  // Checks to make sure the id's format is correct
+  const id_re = /[0-9]{18}$/
+  if (!id_re.test(req.params.id)) {
+    res.status(400).send({status:'error', message:"Invalid or missing id, try again."})
+    return;
+  }
+
+  console.log(req.params.id);
+
+  try {
+    let response = await adminClient.query(
+      q.If(
+        q.Exists(q.Ref(q.Collection('user'),req.params.id)),
+        q.Get(q.Match(q.Index('get_user_info'), req.params.id)),
+        false
+      )
+    )
+    res.send({status:'success', message:response.data});
+    return;
+  } catch (error) {
+    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
+    return;
+  }
+});
+
+
+accountRouter.post("/gets", async (req, res) => {
+
+  if (req.body.ids === null) {
+    res.status(400).send({status: 'error', server_message: "Data is missing from this request, try again.", error_message: "000"})
+    return;
+  }
+
+  // Checks to make sure the id's format is correct
+  const id_re = /[0-9]{18}$/
+  req.body.ids.forEach((item, i) => {
+    if (!id_re.test(item)) {
+      res.status(400).send({status:'error', message:"Invalid or missing id, try again."})
+      return;
+    }
+  });
+
+
+  try {
+    let response = await adminClient.query(
+      q.Call('get_user_list', req.body.ids)
+    )
+    res.send({status:'success', message:response});
+    return;
+  } catch (error) {
+    res.status(500).send({status: 'error', server_message: "an internal error occured while signing in, try again", error_message: error.message})
+    return;
+  }
+});
+
 // Gets the user preferences
 // Expects
 // Body:

@@ -160,7 +160,7 @@ eventRouter.post("/get/:id", async (req, res) => {
   // Checks to make sure the id's format is correct
   const id_re = /[0-9]{18}$/
   if (!id_re.test(req.params.id)) {
-    res.status(400).send("Invalid or missing id, try again.")
+    res.status(400).send({status:'error', message:"Invalid or missing id, try again."})
     return;
   }
 
@@ -175,13 +175,13 @@ eventRouter.post("/get/:id", async (req, res) => {
     ));
     // if not found, report it
     if (!response) {
-      res.status(400).send("Event not found.")
+      res.status(400).send({status:'error', message:"Event not found."})
       return;
     }
     // Sends the data of the event (not ref because they have it already)
-    res.send(response.data);
+    res.send({status:'success', message:response.data});
   } catch (error) {
-    res.status(500).send(error.message)
+    res.status(500).send({status:'error', message:error.message})
     return;
   }
 });
