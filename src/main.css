@@ -526,6 +526,7 @@ button.join p {
 }
 .profile-buttons button{
   padding: 30px;
+  width: 350px;
 }
 .profile-buttons button:hover{
   border-radius: 3px;
