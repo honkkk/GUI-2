@@ -17,6 +17,9 @@ const DateString = ({date}) => {
   if(day > 3 && day < 21){
     type = 3;
   }
+  if(day > 23 && day < 31){
+    type = 3;
+  }
   let dayType = ["st","nd","rd","th"];
   let ret = (
     <div>
