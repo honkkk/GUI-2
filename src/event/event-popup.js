@@ -31,7 +31,7 @@ const EventPopup = ({users, date, location, capacity, host, togglePopupControlle
           {games.map((game) => (<p>{game}</p>))}
         </div>
         <div className="line"></div>
-        <h3>Participants (3/6)</h3>
+        <h3>Participants ({users.length + 1}/{capacity})</h3>
         <div className="expanded-participants">
           <div>
             {user(20, 20)}
