@@ -14,7 +14,7 @@ const TestPage = ({requestData, handlers, sentRequests}) => {
         requestData.length == 0 ?
           <p>You have no requests to respond to.</p>
         :
-        requestData.map((request, index) => (<RequestBar key={request.user} user = {request.user} event = {request.event} request = {request.request} onRequestChange={handlers.join} getSession={handlers.session}/>))
+        requestData.map((request, index) => (<RequestBar key={request.user+request.event} user = {request.user} event = {request.event} request = {request.request} onRequestChange={handlers.join} getSession={handlers.session}/>))
         : <p>loading...</p>
       }
       <h2>Sent requests</h2>
@@ -23,7 +23,7 @@ const TestPage = ({requestData, handlers, sentRequests}) => {
         sentRequests.length == 0 ?
           <p>You have no pending requests.</p>
         :
-        sentRequests.map((request, index) => (<RequestBar key={request.event} ky={index} isSent={true} event={request.event} onCancel={handlers.cancel} request={request.request}/>))
+        sentRequests.map((request, index) => (<RequestBar key={request.event} ky={index} isSent={true} event={request.event} onCancel={handlers.cancel} request={request.request} getSession={handlers.session}/>))
         : <p>loading...</p>
       }
     </div>

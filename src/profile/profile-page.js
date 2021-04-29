@@ -8,7 +8,7 @@ import GamesPopup from "./games-popup.js"
 import AddGamesPopup from "./add-game-popup.js"
 import {useState} from 'react';
 
-const ProfilePage = ({user_data, upcoming, addGame}) => {
+const ProfilePage = ({user_data, upcoming, addGame, handlers}) => {
   const [showGamesPopup, setShowGamesPopup] = useState(false)
   const [showAddGamesPopup, setShowAddGamesPopup] = useState(false)
   const [showFilterList, setShowFilterList] = useState(false)
@@ -52,10 +52,10 @@ const ProfilePage = ({user_data, upcoming, addGame}) => {
       </div>
       </div>
       <section>
-        {(!showFilterList) && <EventCardCollection events={upcoming} size={3} />}
+        {(!showFilterList) && <EventCardCollection handlers={handlers} events={upcoming} size={3} />}
       </section>
       <section>
-        {(showFilterList) && <EventCardCollection events={upcoming.filter((upcoming) => upcoming.host == user_data.id)} size={3} />}
+        {(showFilterList) && <EventCardCollection handlers={handlers} events={upcoming.filter((upcoming) => upcoming.host == user_data.id)} size={3} />}
       </section>
       {showGamesPopup && <GamesPopup user_games = {user_data.games} closePopup = {toggleGamesPopup} addGames={toggleAddGamesPopup}/>}
       {showAddGamesPopup && <AddGamesPopup addGame = {addGame} closePopup ={closeAddGamesPopup}/>}
